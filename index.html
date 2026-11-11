@@ -17,6 +17,7 @@
     .title-field span { color: #d93025; }
     
     input[type="text"], input[type="password"], input[type="date"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 14px;}
+    input[readonly] { background-color: #e8eaed; font-weight: bold; color: #5f6368; outline: none;}
     .action-btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; margin-top: 10px;}
     .btn-blue { background: var(--primary); } .btn-green { background: #34a853; } .btn-orange { background: #f29900; } .btn-gray { background: #5f6368; width: auto; padding: 10px;}
     
@@ -28,11 +29,9 @@
     
     .view-section { display: none; } .view-active { display: block; }
     
-    /* Signature Pad & Image */
     canvas { border: 2px dashed var(--border); border-radius: 8px; width: 100%; height: 150px; background: #fafafa; touch-action: none;}
     #preview-foto { max-width: 100%; margin-top: 10px; border-radius: 8px; display: none; }
     
-    /* Table & Search */
     .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
     .data-item { border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 12px; background: white; }
     .btn-group { display: flex; gap: 10px; margin-top: 12px; }
@@ -47,10 +46,11 @@
   
   <!-- LAYAR LOGIN -->
   <div id="view-login" class="view-section view-active card header-card" style="text-align: center;">
-    <h2>Sistem P2H Dozer</h2>
-    <p style="font-size: 13px; color: gray;">Opr: 1234 | Admin: 9999</p>
-    <input type="password" id="pin-input" placeholder="Masukkan PIN Akses..." style="text-align:center; font-size:20px; letter-spacing: 5px;">
-    <button class="action-btn btn-blue" onclick="prosesLogin()">MASUK APLIKASI</button>
+    <h2>Login P2H DOZER</h2>
+    <p style="font-size: 13px; color: gray;">Masukkan PIN terdaftar Anda</p>
+    <div id="login-status" class="badge online">Memeriksa Internet...</div>
+    <input type="password" id="pin-input" placeholder="Contoh: 11111" style="text-align:center; font-size:20px; letter-spacing: 5px; margin-bottom: 15px;">
+    <button id="btn-login" class="action-btn btn-blue" onclick="prosesLogin()">MASUK APLIKASI</button>
   </div>
 
   <!-- LAYAR FORM P2H -->
@@ -58,12 +58,12 @@
     <div class="card header-card">
       <div id="status-koneksi" class="badge online">Memeriksa Internet...</div>
       <h1>P2H DOZER</h1>
-      <span id="role-badge" style="font-size: 12px; background: #e8eaed; padding: 3px 8px; border-radius: 4px;">Role</span>
+      <span id="role-badge" style="font-size: 13px; background: #e8eaed; padding: 5px 10px; border-radius: 4px; font-weight: bold;">Role</span>
     </div>
 
     <button id="btn-sync-offline" class="action-btn btn-orange" style="display:none;" onclick="sinkronisasiOffline()">🔄 Kirim Data Offline (0)</button>
     <button class="action-btn btn-green" onclick="bacaDataServer()">📋 Lihat Riwayat P2H (Search/Filter)</button>
-    <button class="action-btn btn-gray" onclick="keluarAplikasi()">Logout</button>
+    <button class="action-btn btn-gray" onclick="keluarAplikasi()">Logout (Ganti Akun)</button>
     <br><br>
 
     <div class="card">
@@ -75,8 +75,8 @@
       <div class="title-field">ID Unit <span>*</span></div>
       <input type="text" id="id-unit" required style="margin-bottom:15px;">
 
-      <div class="title-field">Nama Karyawan <span>*</span></div>
-      <input type="text" id="nama-karyawan" required style="margin-bottom:15px;">
+      <div class="title-field">Nama Karyawan (Otomatis)</div>
+      <input type="text" id="nama-karyawan" readonly style="margin-bottom:15px;">
       
       <div class="title-field">Shift <span>*</span></div>
       <select id="shift" style="margin-bottom:15px;">
@@ -86,36 +86,27 @@
       </select>
       
       <div class="title-field">Masalah (P1)</div>
-      <textarea id="detail-p1" rows="2" placeholder="Catat kelainan P1 di sini... (kosongkan jika aman)" style="margin-bottom:15px;"></textarea>
+      <textarea id="detail-p1" rows="2" placeholder="Catat kelainan P1... (kosongkan jika aman)" style="margin-bottom:15px;"></textarea>
 
       <div class="title-field">Masalah (P2)</div>
-      <textarea id="detail-p2" rows="2" placeholder="Catat kelainan P2 di sini... (kosongkan jika aman)" style="margin-bottom:15px;"></textarea>
+      <textarea id="detail-p2" rows="2" placeholder="Catat kelainan P2... (kosongkan jika aman)" style="margin-bottom:15px;"></textarea>
       
       <div class="title-field">Status Kelayakan <span>*</span></div>
       <select id="status" style="margin-bottom:15px;">
         <option value="Layak Dioperasikan">🟢 Layak Dioperasikan</option>
-        <option value="Tidak Layak">🔴 Tidak Layak Dioperasikan</option>
+        <option value="Tidak Layak Dioperasikan">🔴 Tidak Layak Dioperasikan</option>
       </select>
 
       <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <div style="flex:1;">
-          <div class="title-field">SMU Awal <span>*</span></div>
-          <input type="text" id="smu-mulai">
-        </div>
-        <div style="flex:1;">
-          <div class="title-field">SMU Akhir</div>
-          <input type="text" id="smu-selesai">
-        </div>
+        <div style="flex:1;"><div class="title-field">SMU Awal <span>*</span></div><input type="text" id="smu-mulai"></div>
+        <div style="flex:1;"><div class="title-field">SMU Akhir</div><input type="text" id="smu-selesai"></div>
       </div>
 
-      <!-- FOTO KERUSAKAN -->
       <div class="title-field">Upload Foto Kerusakan</div>
       <input type="file" id="foto-input" accept="image/*" capture="environment" onchange="kompresFoto(event)">
       <img id="preview-foto">
       <input type="hidden" id="base64-foto" value="">
-      <p style="font-size:11px; color:gray; margin-bottom:20px;">*Foto akan otomatis dikompresi agar hemat kuota & bisa disimpan offline.</p>
 
-      <!-- TANDA TANGAN -->
       <div class="title-field">Tanda Tangan Pengawas/Operator <span>*</span></div>
       <canvas id="ttd-canvas"></canvas>
       <button class="action-btn btn-gray" style="margin-bottom:20px;" onclick="bersihkanTTD()">Hapus TTD</button>
@@ -144,105 +135,126 @@
 </div>
 
 <script>
-  // 1. GANTI URL INI
-  const GAS_URL = 'PASTE_URL_WEB_APP_ANDA_DI_SINI'; 
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbx0psCB7xnXEoN0x_S6ea24Vr8ZQX-Nj2lxfn_qeXZpfFHBHaE_MUDOcve0vvcsfbeG-Q/exec'; // GANTI INI
   
-  let userRole = ''; 
-  let dataRiwayat = []; // Menyimpan data dari server untuk difilter
+  let currentUser = null; 
+  let dataRiwayat = []; 
 
-  // --- LOGIKA LOGIN ---
+  // --- INISIALISASI & CACHE LOGIN ---
+  window.onload = () => {
+    updateOnlineStatus();
+    const savedUser = localStorage.getItem('p2h_user');
+    if (savedUser) {
+      currentUser = JSON.parse(savedUser);
+      masukApp();
+    }
+  };
+
+  // --- LOGIKA LOGIN API ---
   function prosesLogin() {
     const pin = document.getElementById('pin-input').value;
-    if (pin === '1234') { userRole = 'Operator'; masukApp(); }
-    else if (pin === '9999') { userRole = 'Admin'; masukApp(); }
-    else { alert('PIN Salah!'); }
+    if (!pin) return alert("Masukkan PIN!");
+    
+    if (!navigator.onLine) {
+      alert("Anda sedang offline. Anda harus terkoneksi internet untuk login pertama kali.");
+      return;
+    }
+
+    const btn = document.getElementById('btn-login');
+    btn.innerText = "Mengecek..."; btn.disabled = true;
+
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "login", pin: pin }) })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === "sukses") {
+        currentUser = { nama: res.nama, role: res.role };
+        localStorage.setItem('p2h_user', JSON.stringify(currentUser)); // Simpan sesi
+        masukApp();
+      } else {
+        alert(res.pesan);
+      }
+    })
+    .finally(() => { btn.innerText = "MASUK APLIKASI"; btn.disabled = false; });
   }
+
   function masukApp() {
-    document.getElementById('role-badge').innerText = `Akses: ${userRole}`;
+    document.getElementById('role-badge').innerText = `👤 ${currentUser.nama} (${currentUser.role})`;
+    document.getElementById('nama-karyawan').value = currentUser.nama; // Auto-fill nama
     document.getElementById('pin-input').value = "";
     gantiLayar('view-form');
     inisialisasiCanvas();
   }
+
   function keluarAplikasi() {
-    userRole = ''; gantiLayar('view-login');
+    if(!confirm("Yakin ingin keluar? Anda butuh internet untuk login kembali.")) return;
+    localStorage.removeItem('p2h_user');
+    currentUser = null;
+    gantiLayar('view-login');
   }
 
-  // --- LOGIKA STATUS INTERNET ---
+  // --- STATUS INTERNET ---
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-  window.addEventListener('load', updateOnlineStatus);
   window.addEventListener('online', updateOnlineStatus);
   window.addEventListener('offline', updateOnlineStatus);
 
   function updateOnlineStatus() {
-    const badge = document.getElementById('status-koneksi');
-    badge.innerText = navigator.onLine ? '🟢 ONLINE' : '🔴 OFFLINE';
-    badge.className = navigator.onLine ? 'badge online' : 'badge offline';
+    const b1 = document.getElementById('status-koneksi');
+    const b2 = document.getElementById('login-status');
+    const statusTxt = navigator.onLine ? '🟢 ONLINE' : '🔴 OFFLINE';
+    const statusClass = navigator.onLine ? 'badge online' : 'badge offline';
+    
+    if(b1) { b1.innerText = statusTxt; b1.className = statusClass; }
+    if(b2) { b2.innerText = statusTxt; b2.className = statusClass; }
     cekDataOffline();
   }
 
-  // --- LOGIKA CANVAS TANDA TANGAN ---
+  // --- CANVAS TANDA TANGAN ---
   let canvas, ctx, isDrawing = false;
   function inisialisasiCanvas() {
     canvas = document.getElementById('ttd-canvas');
     ctx = canvas.getContext('2d');
-    
-    // Sesuaikan ukuran asli canvas dengan tampilan CSS
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width; canvas.height = rect.height;
 
     const startDraw = (e) => { isDrawing = true; draw(e); };
     const endDraw = () => { isDrawing = false; ctx.beginPath(); };
     const draw = (e) => {
-      if (!isDrawing) return;
-      e.preventDefault();
-      let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-      let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+      if (!isDrawing) return; e.preventDefault();
+      let cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+      let cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
       const r = canvas.getBoundingClientRect();
       ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.strokeStyle = "#000";
-      ctx.lineTo(clientX - r.left, clientY - r.top);
-      ctx.stroke(); ctx.beginPath();
-      ctx.moveTo(clientX - r.left, clientY - r.top);
+      ctx.lineTo(cx - r.left, cy - r.top); ctx.stroke(); ctx.beginPath();
+      ctx.moveTo(cx - r.left, cy - r.top);
     };
-
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mouseup', endDraw);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchstart', startDraw, {passive: false});
-    canvas.addEventListener('touchend', endDraw);
-    canvas.addEventListener('touchmove', draw, {passive: false});
+    canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mouseup', endDraw); canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchstart', startDraw, {passive: false}); canvas.addEventListener('touchend', endDraw); canvas.addEventListener('touchmove', draw, {passive: false});
   }
   function bersihkanTTD() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-  // --- LOGIKA KOMPRESI FOTO ---
-  function kompresFoto(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+  // --- KOMPRESI FOTO ---
+  function kompresFoto(e) {
+    const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function(evt) {
       const img = new Image();
       img.onload = function() {
         const cvs = document.createElement('canvas');
-        const MAX_WIDTH = 600; // Dikecilkan agar hemat memory offline
-        let width = img.width, height = img.height;
-        if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
-        else { if (height > MAX_WIDTH) { width *= MAX_WIDTH / height; height = MAX_WIDTH; } }
-        cvs.width = width; cvs.height = height;
-        cvs.getContext('2d').drawImage(img, 0, 0, width, height);
-        
-        const b64 = cvs.toDataURL('image/jpeg', 0.6); // Kompres 60%
+        let w = img.width, h = img.height, max = 600;
+        if (w > h) { if (w > max) { h *= max / w; w = max; } } else { if (h > max) { w *= max / h; h = max; } }
+        cvs.width = w; cvs.height = h;
+        cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+        const b64 = cvs.toDataURL('image/jpeg', 0.6);
         document.getElementById('base64-foto').value = b64;
         document.getElementById('preview-foto').src = b64;
         document.getElementById('preview-foto').style.display = 'block';
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+      }; img.src = evt.target.result;
+    }; reader.readAsDataURL(file);
   }
 
-  // --- CRUD LOGIC & OFFLINE ---
+  // --- CRUD LOGIC ---
   function simpanAtauEdit() {
     const idEdit = document.getElementById('edit-id').value;
-    // Cek apakah canvas kosong (tidak ditandatangani)
     const isCanvasBlank = document.createElement('canvas');
     isCanvasBlank.width = canvas.width; isCanvasBlank.height = canvas.height;
     const ttdBase64 = canvas.toDataURL() === isCanvasBlank.toDataURL() ? "" : canvas.toDataURL('image/png');
@@ -253,18 +265,15 @@
       tanggal: document.getElementById('tanggal').value,
       idUnit: document.getElementById('id-unit').value,
       namaKaryawan: document.getElementById('nama-karyawan').value,
-      sn: 'SN-Auto', // Disederhanakan untuk ruang layar
-      shift: document.getElementById('shift').value,
+      sn: 'SN-Auto', shift: document.getElementById('shift').value,
       p1: 'Lihat Detail', detailP1: document.getElementById('detail-p1').value,
       p2: 'Lihat Detail', detailP2: document.getElementById('detail-p2').value,
       statusUnit: document.getElementById('status').value,
-      smuMulai: document.getElementById('smu-mulai').value,
-      smuSelesai: document.getElementById('smu-selesai').value,
-      foto: document.getElementById('base64-foto').value,
-      ttd: ttdBase64
+      smuMulai: document.getElementById('smu-mulai').value, smuSelesai: document.getElementById('smu-selesai').value,
+      foto: document.getElementById('base64-foto').value, ttd: ttdBase64
     };
 
-    if(!payload.tanggal || !payload.idUnit || !payload.namaKaryawan) return alert("Lengkapi data wajib!");
+    if(!payload.tanggal || !payload.idUnit) return alert("Lengkapi Tanggal dan ID Unit!");
 
     if(!navigator.onLine) {
       if(idEdit !== "") return alert("Tidak bisa mengedit saat offline.");
@@ -276,16 +285,13 @@
     }
 
     const btn = document.getElementById('btn-submit');
-    btn.innerText = "Mengirim Data & File..."; btn.disabled = true;
+    btn.innerText = "Mengirim..."; btn.disabled = true;
 
     fetch(GAS_URL, {
       method: 'POST', body: JSON.stringify(idEdit === "" ? { action: "tambah", data: [payload] } : { action: "edit", id: idEdit, ...payload })
     })
     .then(res => res.json())
-    .then(res => {
-      alert("Berhasil disimpan ke Google Sheets & Drive!");
-      idEdit !== "" ? bacaDataServer() : kosongkanForm();
-    })
+    .then(() => { alert("Berhasil disimpan!"); idEdit !== "" ? bacaDataServer() : kosongkanForm(); })
     .finally(() => { btn.innerText = "KIRIM FORMULIR P2H"; btn.disabled = false; });
   }
 
@@ -296,27 +302,21 @@
 
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "baca" }) })
     .then(res => res.json())
-    .then(res => {
-      dataRiwayat = res.data.reverse(); // Simpan di variabel global untuk filter
-      filterTabel(); // Tampilkan data
-    });
+    .then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
   }
 
-  // --- LOGIKA FILTER PENCARIAN ---
   function filterTabel() {
     const searchTxt = document.getElementById('search-input').value.toLowerCase();
     const filterStat = document.getElementById('filter-status').value;
     const box = document.getElementById('list-data');
-    
     let html = "";
+    
     dataRiwayat.forEach(item => {
-      // Logika pencarian
-      const cocokKata = item.idUnit.toLowerCase().includes(searchTxt) || item.namaKaryawan.toLowerCase().includes(searchTxt);
-      const cocokStatus = (filterStat === "ALL") || item.statusUnit.includes(filterStat);
-      
-      if (cocokKata && cocokStatus) {
-        // Tombol Hapus hanya muncul untuk Admin
-        const btnHapusHTML = userRole === 'Admin' ? `<button class="btn-hapus" onclick="hapusData('${item.id}')">Hapus (Admin)</button>` : '';
+      if ((item.idUnit.toLowerCase().includes(searchTxt) || item.namaKaryawan.toLowerCase().includes(searchTxt)) && 
+          (filterStat === "ALL" || item.statusUnit.includes(filterStat))) {
+        
+        // HANYA ADMIN YANG BISA MELIHAT TOMBOL HAPUS
+        const btnHapusHTML = currentUser.role === 'Admin' ? `<button class="btn-hapus" onclick="hapusData('${item.id}')">Hapus (Admin)</button>` : '';
         const dataJson = encodeURIComponent(JSON.stringify(item));
         
         html += `
@@ -345,22 +345,17 @@
     document.getElementById('edit-id').value = item.id;
     document.getElementById('tanggal').value = item.tanggal.split('T')[0];
     document.getElementById('id-unit').value = item.idUnit;
-    document.getElementById('nama-karyawan').value = item.namaKaryawan;
     document.getElementById('shift').value = item.shift;
     document.getElementById('detail-p1').value = item.detailP1;
     document.getElementById('detail-p2').value = item.detailP2;
     document.getElementById('status').value = item.statusUnit;
     document.getElementById('smu-mulai').value = item.smuMulai;
     document.getElementById('smu-selesai').value = item.smuSelesai;
-    document.getElementById('base64-foto').value = ""; // Kosongkan foto lama di HP
-    
-    alert("Catatan: Foto dan TTD tidak perlu diisi ulang saat edit kecuali ingin diganti.");
-    gantiLayar('view-form');
-    window.scrollTo(0,0);
+    gantiLayar('view-form'); window.scrollTo(0,0);
   }
 
   function hapusData(id) {
-    if(!confirm("Admin: Yakin hapus data ini permanen?")) return;
+    if(!confirm("Admin: Yakin hapus permanen?")) return;
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "hapus", id: id }) })
     .then(res => res.json()).then(() => bacaDataServer());
   }
@@ -368,7 +363,7 @@
   function cekDataOffline() {
     let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
     const btn = document.getElementById('btn-sync-offline');
-    if (saved.length > 0 && navigator.onLine) {
+    if (saved.length > 0 && navigator.onLine && currentUser) {
       btn.style.display = 'block'; btn.innerText = `🔄 Kirim Data Offline (${saved.length})`;
     } else { btn.style.display = 'none'; }
   }
@@ -376,21 +371,15 @@
   function sinkronisasiOffline() {
     let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
     const btn = document.getElementById('btn-sync-offline');
-    btn.innerText = "Mengirim massal..."; btn.disabled = true;
-
+    btn.innerText = "Mengirim..."; btn.disabled = true;
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "tambah", data: saved }) })
-    .then(res => res.json())
-    .then(() => {
-      alert("Semua data offline terkirim!");
-      localStorage.removeItem('p2hData'); cekDataOffline();
-    })
+    .then(res => res.json()).then(() => { alert("Terkirim!"); localStorage.removeItem('p2hData'); cekDataOffline(); })
     .finally(() => btn.disabled = false);
   }
 
   function kosongkanForm() {
     document.getElementById('edit-id').value = "";
     document.getElementById('id-unit').value = "";
-    document.getElementById('nama-karyawan').value = "";
     document.getElementById('detail-p1').value = "";
     document.getElementById('detail-p2').value = "";
     document.getElementById('smu-selesai').value = "";
@@ -399,6 +388,7 @@
     document.getElementById('preview-foto').style.display = "none";
     bersihkanTTD();
   }
+  
   function gantiLayar(idLayar) {
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('view-active'));
     document.getElementById(idLayar).classList.add('view-active');

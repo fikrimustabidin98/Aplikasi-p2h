@@ -3,51 +3,202 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>P2H Alat Berat Lengkap</title>
+  <title>P2H Alat Berat</title>
+  <link rel="manifest" href="manifest.json">
   <style>
-    body { font-family: Arial, sans-serif; padding: 15px; max-width: 500px; margin: auto; }
-    input, select, textarea, button { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; box-sizing: border-box;}
-    button { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer;}
-    .btn-sync { background: #007bff; }
-    .btn-hapus { background: #dc3545; padding: 5px; width: auto; font-size: 12px;}
-    .btn-edit { background: #ffc107; color: black; padding: 5px; width: auto; font-size: 12px;}
-    .data-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background: #f9f9f9; }
-    #list-data { margin-top: 20px; }
+    /* --- PENGATURAN WARNA & TEMA MODERN --- */
+    :root {
+      --primary: #0d6efd;
+      --success: #198754;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --bg-color: #f4f7f6;
+      --text-main: #2c3e50;
+      --text-muted: #6c757d;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 20px 15px;
+    }
+
+    .app-container {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    /* --- GAYA KARTU (CARD) --- */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    h2 { margin: 0; font-size: 1.4rem; color: var(--text-main); }
+
+    /* --- BADGE STATUS KONEKSI --- */
+    .badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge.online { background: #d1e7dd; color: #0f5132; }
+    .badge.offline { background: #f8d7da; color: #842029; }
+
+    /* --- FORM & INPUT --- */
+    .form-group { margin-bottom: 15px; }
+    
+    label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      box-sizing: border-box;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background-color: #f8fafc;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      background-color: #ffffff;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    }
+
+    /* --- TOMBOL (BUTTON) --- */
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      margin-bottom: 10px;
+    }
+    
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-submit { background: var(--success); color: white; box-shadow: 0 4px 6px rgba(25, 135, 84, 0.2); }
+    .btn-sync { background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2); }
+    
+    /* Tombol kecil di dalam data */
+    .btn-action-group { display: flex; gap: 8px; margin-top: 12px; }
+    .btn-edit { background: #fff3cd; color: #856404; padding: 8px; font-size: 0.85rem; flex: 1; margin: 0; box-shadow: none; border: 1px solid #ffeeba;}
+    .btn-hapus { background: #f8d7da; color: #721c24; padding: 8px; font-size: 0.85rem; flex: 1; margin: 0; box-shadow: none; border: 1px solid #f5c6cb;}
+
+    /* --- LIST DATA --- */
+    .data-item {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+    .data-item:last-child { border-bottom: none; }
+    .data-title { font-size: 1.1rem; font-weight: bold; color: var(--primary); margin-bottom: 4px; }
+    .data-subtitle { font-size: 0.85rem; color: var(--text-muted); }
+    .data-note { background: #f8fafc; padding: 10px; border-radius: 8px; font-size: 0.9rem; margin-top: 8px; border-left: 3px solid var(--warning); }
   </style>
 </head>
 <body>
-  <h2>Form P2H (Tambah & Edit)</h2>
-  
-  <!-- Input tersembunyi untuk menyimpan ID saat mode Edit -->
-  <input type="hidden" id="edit-id" value="">
 
-  <label>Nama Operator:</label>
-  <input type="text" id="operator">
-  
-  <label>Kode Unit:</label>
-  <input type="text" id="unit">
+  <div class="app-container">
+    
+    <!-- Bagian Header & Status -->
+    <div class="header-section">
+      <h2>Form P2H Unit</h2>
+      <div id="status-koneksi" class="badge online">Memeriksa...</div>
+    </div>
 
-  <label>Status:</label>
-  <select id="status">
-    <option>Ready to Use</option>
-    <option>Breakdown</option>
-  </select>
+    <!-- Bagian Form -->
+    <div class="card">
+      <input type="hidden" id="edit-id" value="">
 
-  <label>Catatan:</label>
-  <textarea id="catatan"></textarea>
+      <div class="form-group">
+        <label>Nama Operator</label>
+        <input type="text" id="operator" placeholder="Masukkan nama Anda">
+      </div>
+      
+      <div class="form-group">
+        <label>Kode Unit</label>
+        <input type="text" id="unit" placeholder="Misal: EX-01">
+      </div>
 
-  <button id="btn-submit" onclick="simpanAtauEdit()">Submit Data Baru</button>
-  <button class="btn-sync" onclick="bacaDataServer()">Lihat Data dari Server (Online)</button>
+      <div class="form-group">
+        <label>Status Unit</label>
+        <select id="status">
+          <option value="Ready to Use">🟢 Ready to Use</option>
+          <option value="Breakdown">🔴 Breakdown</option>
+          <option value="Standby">🟡 Standby</option>
+        </select>
+      </div>
 
-  <div id="list-data"></div>
+      <div class="form-group">
+        <label>Catatan Temuan</label>
+        <textarea id="catatan" rows="3" placeholder="Tulis kerusakan atau catatan di sini..."></textarea>
+      </div>
+
+      <button id="btn-submit" class="btn-submit" onclick="simpanAtauEdit()">Kirim Data P2H</button>
+    </div>
+
+    <!-- Bagian Data Server -->
+    <div class="card">
+      <button class="btn-sync" onclick="bacaDataServer()">Tampilkan Data Server</button>
+      <div id="list-data">
+        <p style="text-align:center; color:#6c757d; font-size:0.9rem; margin-top:15px;">Klik tombol di atas untuk melihat data yang sudah masuk.</p>
+      </div>
+    </div>
+
+  </div>
 
   <script>
-    // GANTI DENGAN URL WEB APP ANDA YANG BARU
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbx0psCB7xnXEoN0x_S6ea24Vr8ZQX-Nj2lxfn_qeXZpfFHBHaE_MUDOcve0vvcsfbeG-Q/exec';
+    // === JANGAN LUPA GANTI URL INI DENGAN URL WEB APP ANDA ===
+    const GAS_URL = 'PASTE_URL_WEB_APP_ANDA_DI_SINI';
 
+    // Logika Offline/Online UI Update
+    window.addEventListener('load', updateOnlineStatus);
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    function updateOnlineStatus() {
+      const statusBadge = document.getElementById('status-koneksi');
+      if (navigator.onLine) {
+        statusBadge.innerHTML = '● ONLINE';
+        statusBadge.className = 'badge online';
+      } else {
+        statusBadge.innerHTML = '○ OFFLINE';
+        statusBadge.className = 'badge offline';
+      }
+    }
+
+    // === LOGIKA JAVASCRIPT TETAP SAMA SEPERTI SEBELUMNYA ===
     function simpanAtauEdit() {
       const idEdit = document.getElementById('edit-id').value;
-      
       const payload = {
         operator: document.getElementById('operator').value,
         unit: document.getElementById('unit').value,
@@ -55,9 +206,10 @@
         catatan: document.getElementById('catatan').value
       };
 
+      if (!payload.operator || !payload.unit) return alert("Nama dan Unit wajib diisi!");
+
       if (!navigator.onLine) {
-        alert("Anda sedang Offline. Edit/Hapus tidak bisa dilakukan. Data baru disimpan di HP.");
-        // Logika offline khusus tambah data (sama seperti sebelumnya)
+        alert("Offline mode. Data disimpan di HP sementara.");
         let dataTersimpan = JSON.parse(localStorage.getItem('p2hData')) || [];
         dataTersimpan.push(payload);
         localStorage.setItem('p2hData', JSON.stringify(dataTersimpan));
@@ -65,15 +217,11 @@
         return;
       }
 
-      document.getElementById('btn-submit').innerText = "Memproses...";
+      const btn = document.getElementById('btn-submit');
+      btn.innerText = "Memproses...";
+      btn.disabled = true;
 
-      // Tentukan apakah ini Tambah Baru atau Edit Data Lama
-      let requestBody = {};
-      if (idEdit === "") {
-        requestBody = { action: "tambah", data: [payload] };
-      } else {
-        requestBody = { action: "edit", id: idEdit, ...payload };
-      }
+      let requestBody = idEdit === "" ? { action: "tambah", data: [payload] } : { action: "edit", id: idEdit, ...payload };
 
       fetch(GAS_URL, {
         method: 'POST',
@@ -82,15 +230,20 @@
       })
       .then(res => res.json())
       .then(result => {
-        alert(idEdit === "" ? "Data berhasil ditambah!" : "Data berhasil diedit!");
+        alert(idEdit === "" ? "Data berhasil disimpan!" : "Data berhasil diperbarui!");
         kosongkanForm();
-        bacaDataServer(); // Langsung perbarui tabel
+        bacaDataServer();
+      })
+      .finally(() => {
+        btn.innerText = "Kirim Data P2H";
+        btn.disabled = false;
       });
     }
 
     function bacaDataServer() {
-      if (!navigator.onLine) return alert("Harus terhubung internet untuk melihat data.");
-      document.getElementById('list-data').innerHTML = "Memuat data dari server...";
+      if (!navigator.onLine) return alert("Harus online untuk melihat data.");
+      const listDiv = document.getElementById('list-data');
+      listDiv.innerHTML = "<p style='text-align:center;'>Mengambil data...</p>";
 
       fetch(GAS_URL, {
         method: 'POST',
@@ -99,18 +252,27 @@
       })
       .then(res => res.json())
       .then(result => {
-        let html = "<h3>Daftar Data P2H:</h3>";
-        result.data.forEach(item => {
+        if (!result.data || result.data.length === 0) {
+          listDiv.innerHTML = "<p style='text-align:center;'>Belum ada data.</p>";
+          return;
+        }
+
+        let html = "";
+        // Balikkan urutan agar data terbaru ada di atas
+        result.data.reverse().forEach(item => {
           html += `
-            <div class="data-card">
-              <strong>${item.unit}</strong> - ${item.operator} (${item.status})<br>
-              <small>${item.catatan}</small><br><br>
-              <button class="btn-edit" onclick="siapkanEdit('${item.id}', '${item.operator}', '${item.unit}', '${item.status}', '${item.catatan}')">Edit</button>
-              <button class="btn-hapus" onclick="hapusData('${item.id}')">Hapus</button>
+            <div class="data-item">
+              <div class="data-title">${item.unit}</div>
+              <div class="data-subtitle">👷 ${item.operator} | 🚥 ${item.status}</div>
+              ${item.catatan ? `<div class="data-note">${item.catatan}</div>` : ''}
+              <div class="btn-action-group">
+                <button class="btn-edit" onclick="siapkanEdit('${item.id}', '${item.operator}', '${item.unit}', '${item.status}', '${item.catatan}')">✏️ Edit</button>
+                <button class="btn-hapus" onclick="hapusData('${item.id}')">🗑️ Hapus</button>
+              </div>
             </div>
           `;
         });
-        document.getElementById('list-data').innerHTML = html;
+        listDiv.innerHTML = html;
       });
     }
 
@@ -119,13 +281,18 @@
       document.getElementById('operator').value = operator;
       document.getElementById('unit').value = unit;
       document.getElementById('status').value = status;
-      document.getElementById('catatan').value = catatan;
-      document.getElementById('btn-submit').innerText = "Update Data (Edit)";
-      window.scrollTo(0, 0); // Gulir layar ke atas
+      document.getElementById('catatan').value = catatan !== 'undefined' ? catatan : '';
+      
+      const btn = document.getElementById('btn-submit');
+      btn.innerText = "Simpan Perubahan";
+      btn.style.background = "var(--warning)";
+      btn.style.color = "#000";
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function hapusData(id) {
-      if(!confirm("Yakin ingin menghapus data ini?")) return;
+      if(!confirm("Yakin ingin menghapus data P2H ini?")) return;
       
       fetch(GAS_URL, {
         method: 'POST',
@@ -133,9 +300,9 @@
         body: JSON.stringify({ action: "hapus", id: id })
       })
       .then(res => res.json())
-      .then(result => {
+      .then(() => {
         alert("Data dihapus!");
-        bacaDataServer(); // Perbarui tabel
+        bacaDataServer();
       });
     }
 
@@ -144,7 +311,11 @@
       document.getElementById('operator').value = "";
       document.getElementById('unit').value = "";
       document.getElementById('catatan').value = "";
-      document.getElementById('btn-submit').innerText = "Submit Data Baru";
+      
+      const btn = document.getElementById('btn-submit');
+      btn.innerText = "Kirim Data P2H";
+      btn.style.background = "var(--success)";
+      btn.style.color = "#fff";
     }
   </script>
 </body>

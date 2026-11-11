@@ -48,11 +48,7 @@
     .view-active { display: block; }
     
     /* LOGIN WRAPPER */
-    .login-wrapper {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1578885136359-16c8bee4d81e?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat;
-      z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
-    }
+    .login-wrapper { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1578885136359-16c8bee4d81e?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px;}
     #view-login.view-active { display: flex; } 
     .login-box { background: rgba(255, 255, 255, 0.95); padding: 30px 25px; border-radius: 12px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-top: 8px solid var(--primary); }
     .login-logo { width: 160px; margin-bottom: 15px; object-fit: contain; }
@@ -149,36 +145,16 @@
           <label class="radio-item"><input type="radio" name="shift" value="NS (Night Shift)"> NS (Night Shift)</label>
         </div>
         
+        <!-- CHECKLIST P1 DIBUAT DINAMIS MELALUI JAVASCRIPT -->
         <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P1) <span>*</span></div>
-        <div class="checkbox-group">
-          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Level Oli Engine (Kurang / di bawah minimal)"> [P1] Level Oli Engine (Kurang / di bawah minimal)</label>
-          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)"> [P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)</label>
-          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake"> [P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake</label>
-          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Indikator Warning: Gauge, Monitor display, Alarm"> [P1] Indikator Warning: Gauge, Monitor display, Alarm</label>
-          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Stiker Komisioning (Mati/Tidak ada)"> [P1] Stiker Komisioning (Mati/Tidak ada)</label>
-          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"> [P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder</label>
-          <label class="checkbox-item"><input type="checkbox" name="p1" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p1', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>
-        </div>
+        <div id="container-p1" class="checkbox-group"></div>
 
         <div class="title-field">Detail Masalah / Temuan Lapangan (P1)</div>
         <textarea id="detail-p1" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
 
+        <!-- CHECKLIST P2 DIBUAT DINAMIS MELALUI JAVASCRIPT -->
         <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P2) <span>*</span></div>
-        <div class="checkbox-group">
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)"> [P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)"> [P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Kebocoran Cairan disekitar komponen utama"> [P2] Kebocoran Cairan disekitar komponen utama</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame"> [P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder"> [P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"> [P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll"> [P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Gangguan saat menghidupkan / mematikan engine"> [P2] Gangguan saat menghidupkan / mematikan engine</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Suara engine tidak normal / asap gas buang pekat"> [P2] Suara engine tidak normal / asap gas buang pekat</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break"> [P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)"> [P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)"> [P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)</label>
-          <label class="checkbox-item"><input type="checkbox" name="p2" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p2', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>
-        </div>
+        <div id="container-p2" class="checkbox-group"></div>
 
         <div class="title-field">Detail Masalah / Temuan Lapangan (P2)</div>
         <textarea id="detail-p2" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
@@ -218,12 +194,177 @@
   </div>
 
 <script>
-  // === GANTI URL INI ===
+  // === GANTI URL INI DENGAN SCRIPT GAS ANDA ===
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbx0psCB7xnXEoN0x_S6ea24Vr8ZQX-Nj2lxfn_qeXZpfFHBHaE_MUDOcve0vvcsfbeG-Q/exec'; 
   
   let currentUser = null; 
-  let currentJenisAlat = ""; // Menyimpan unit yang sedang dipilih user
+  let currentJenisAlat = ""; 
   let dataRiwayat = []; 
+
+  // ================= DATA CHECKLIST DINAMIS =================
+  // Anda dapat menambahkan / mengubah item untuk unit lain (Excavator, WT, dll) di dalam blok kode ini nanti.
+  const checklistData = {
+    "DOZER": {
+      p1: [
+        "[P1] Level Oli Engine (Kurang / di bawah minimal)",
+        "[P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)",
+        "[P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake",
+        "[P1] Indikator Warning: Gauge, Monitor display, Alarm",
+        "[P1] Stiker Komisioning (Mati/Tidak ada)",
+        "[P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"
+      ],
+      p2: [
+        "[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)",
+        "[P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)",
+        "[P2] Kebocoran Cairan disekitar komponen utama",
+        "[P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame",
+        "[P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder",
+        "[P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder",
+        "[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll",
+        "[P2] Gangguan saat menghidupkan / mematikan engine",
+        "[P2] Suara engine tidak normal / asap gas buang pekat",
+        "[P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break",
+        "[P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)",
+        "[P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)"
+      ]
+    },
+    "COMPACTOR": {
+      p1: [
+        "[P1] Level Oli Engine (Kurang / di bawah minimal)",
+        "[P1] Ban kiri & kanan serta baut roda pada Final drive (Bermasalah)",
+        "[P1] Fungsi SKAT: Seat belt, Radio Komunikasi, Lampu malam (Rusak/Absen)",
+        "[P1] Bagian Drum, Scraper drum, Motor vibration, & Rubber (Bermasalah)",
+        "[P1] Stiker Komisioning (Mati / Tidak ada)"
+      ],
+      p2: [
+        "[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)",
+        "[P2] Level Oli (Hyd, Transmisi) & Air Radiator/Wiper",
+        "[P2] Kebocoran/rembesan cairan di komponen utama & kabin engine",
+        "[P2] Tuas kendali: Tuas travel & Kemudi/Steering",
+        "[P2] Bagian Drum, Scraper drum, Motor vibration, & Rubber",
+        "[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll",
+        "[P2] Gangguan ketika menghidupkan atau matikan engine",
+        "[P2] Suara engine tidak normal / asap gas buang pekat",
+        "[P2] Indikator Warning: Gauge, Monitor display, & Alarm",
+        "[P2] Switch Kontrol: Speed travel, Work mode vibration, Switch gas"
+      ]
+    },
+    "EXCAVATOR": {
+  p1: [
+    "[P1] Level Oli Engine (Harus di atas batas minimal)",
+    "[P1] Fungsi SKAT: Seat belt, Radio Komunikasi, Lampu, Fire Suppression gauge (Rusak/Absen)",
+    "[P1] Tuas kendali: Pedal travel, Joy stick, dan Lock hydraulic, swing (Bermasalah)",
+    "[P1] Stiker Komisioning (Mati / Tidak ada)",
+    "[P1] Fungsi SKAT: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI (Rusak/Absen)",
+    "[P1] Pemeriksaan Guard (Pelindung Kaca Kabin) telah terpasang pada Kaca Kabin Excavator"
+  ],
+  p2: [
+    "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan Kehilangan perlengkapan",
+    "[P2] Level Oli (Hydraulic, Swing, Splitter Box *medium) dan Level Air Radiator/Wipper *secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)",
+    "[P2] Bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
+    "[P2] Track group (roller, idler, sprocket, link, shoe, adjuster, dan frame)",
+    "[P2] Attachment (bucket/tip, boom, arm), dan semua cylinder beserta lock pin nya",
+    "[P2] Gangguan ketika menghidupkan atau matikan engine : Periksa suara-suara engine tidak normal dan asap gas buang",
+    "[P2] Switch kontrol : Speed travel, work mode, switch gas engine, dan lock swing* Big size",
+    "[P2] Kamera Fatigue menyala (lampu indikator kamera)***",
+    "[P2] Posisi Kamera Fatigue mengarah ke arah Operator***",
+    "[P2] Perangkat FMS/MINESTAR : Radio Wireless, Status Jaringan dan Display Onboard***",
+    "[P2] Kondisi Stopper dan Switch Proximity Tangga (terdapat cacat fisik atau tidak) **",
+    "[P2] Memastikan Indikator Tangga pada Monitor Berfungsi dengan Baik (saat tangga di posisi bawah dan indikator di monitor menyala)**",
+    "[P2] Memastikan rantai pengaman tangga terpasang dengan baik sebelum operator mengoperasikan unit**"
+  ]
+},
+    "WT": {
+  p1: [
+    "[P1] Periksa level Oli Engine: harus diatas batas minimal",
+    "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
+    "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu)",
+    "[P1] Periksa fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake)",
+    "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
+  ],
+  p2: [
+    "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
+    "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel",
+    "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
+    "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara-suara engine tidak normal dan asap gas buang",
+    "[P2] Periksa tuas kendali: Parking brake, Transmisi, Wiper",
+    "[P2] Periksa Indikator warning: Gauge, Monitor display, dan Alarm",
+    "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*",
+    "[P2] Water pump, sprayer, Water Canon, Jet Washer, Hose Reel (Water Truck)",
+    "[P2] Timer Sprayer (Water Truck)",
+    "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator",
+    "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator",
+    "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard"
+  ]
+},
+    {
+  "GRADER": {
+    "p1": [
+      "[P1] Periksa level Oli Engine: harus diatas batas minimal",
+      "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
+      "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu khusus pekerjaan pada malam hari)",
+      "[P1] Periksa tuas kendali : Pedal Akselerator, Joy stick,pedal brake, steering, tuas Blade grup, tuas Ripper, Diflock",
+      "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
+    ],
+    "p2": [
+      "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
+      "[P2] Periksa level Oli (Hydraulic, Transmisi) dan Level Air Radiator/Wipper secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)",
+      "[P2] Periksa secara visual bekas-bekas kebocoran/ rembesan (semua cairan) disekitar komponen utama unit dan di dalam kabin engine (membuka kap engine)",
+      "[P2] Periksa tandem, lampu kerja, circle, motor circle, drawbar, frame, blade Acumulator, dll",
+      "[P2] Periksa Attachment (Blade, Ripper, dan semua cylinder beserta lock pin nya)",
+      "[P2] Periksa fungsi \"SKAT\" (Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI)",
+      "[P2] Periksa gangguan ketika menghidupkan atau matikan engine",
+      "[P2] Periksa suara- suara engine tidak normal dan asap gas buang",
+      "[P2] Periksa Indikator warning : Gauge, Monitor display, dan Alarm",
+      "[P2] Periksa Switch kontrol : Lock Hydraulic, parking brake, switch lampu kerja, causion blade"
+    ]
+  },
+  "OHT": {
+    "p1": [
+      "[P1] Periksa level Oli Engine: harus diatas batas minimal",
+      "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
+      "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu**,Fire Suppression gauge)",
+      "[P1] Uji fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake) setelah keluar dari change shift area",
+      "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
+    ],
+    "p2": [
+      "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
+      "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel",
+      "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
+      "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara- suara engine tidak normal dan asap gas buang",
+      "[P2] Periksa tuas kendali: Hoist dump Body, Transmisi, Wiper",
+      "[P2] Periksa Indikator warning: Gauge, Monitor display, Payload on Display, dan Alarm",
+      "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*",
+      "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator*",
+      "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator*",
+      "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard*"
+    ]
+  }
+}
+    // Jika Anda belum mengisi untuk Excavator/WT, sistem otomatis mengambil default (Dozer) untuk sementara waktu.
+  };
+
+  // Fungsi untuk memasukkan checklist secara otomatis sesuai unit yang diklik
+  function renderChecklist(jenisAlat) {
+    const config = checklistData[jenisAlat] || checklistData["DOZER"]; // Default ke Dozer jika data alat belum diisi
+    
+    // Render P1
+    let p1HTML = "";
+    config.p1.forEach(item => {
+      p1HTML += `<label class="checkbox-item"><input type="checkbox" name="p1" value="${item}"> ${item}</label>`;
+    });
+    p1HTML += `<label class="checkbox-item"><input type="checkbox" name="p1" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p1', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>`;
+    document.getElementById('container-p1').innerHTML = p1HTML;
+
+    // Render P2
+    let p2HTML = "";
+    config.p2.forEach(item => {
+      p2HTML += `<label class="checkbox-item"><input type="checkbox" name="p2" value="${item}"> ${item}</label>`;
+    });
+    p2HTML += `<label class="checkbox-item"><input type="checkbox" name="p2" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p2', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>`;
+    document.getElementById('container-p2').innerHTML = p2HTML;
+  }
+  // ==============================================================
 
   window.onload = () => {
     updateOnlineStatus();
@@ -260,11 +401,8 @@
   function masukKeMenuUtama() {
     document.querySelectorAll('.role-badge-display').forEach(el => el.innerText = `👤 ${currentUser.nama} (${currentUser.role})`);
     document.getElementById('pin-input').value = "";
-    
-    // Setel variabel otomatis
     document.getElementById('nama-karyawan').value = currentUser.nama; 
     document.getElementById('sn').value = currentUser.pin; 
-    
     gantiLayar('view-menu');
     window.scrollTo(0,0);
   }
@@ -273,6 +411,10 @@
     currentJenisAlat = jenisAlat;
     document.getElementById('judul-form').innerText = `P2H ${jenisAlat}`;
     document.getElementById('judul-riwayat').innerText = `Riwayat P2H ${jenisAlat}`;
+    
+    // Generate Checkbox sesuai jenis alat sebelum membuka form
+    renderChecklist(jenisAlat);
+
     gantiLayar('view-form');
     window.scrollTo(0,0);
   }
@@ -297,15 +439,8 @@
   function updateOnlineStatus() {
     const statusTxt = navigator.onLine ? '🟢 ONLINE' : '🔴 OFFLINE';
     const statusClass = navigator.onLine ? 'badge online' : 'badge offline';
-    
     document.getElementById('login-status').innerText = statusTxt; document.getElementById('login-status').className = statusClass;
     document.getElementById('status-koneksi-menu').innerText = statusTxt; document.getElementById('status-koneksi-menu').className = statusClass;
-    
-    // Element mungkin belum render, jadi gunakan opsional chaining
-    if(document.getElementById('status-koneksi')) {
-      document.getElementById('status-koneksi').innerText = statusTxt; 
-      document.getElementById('status-koneksi').className = statusClass;
-    }
     cekDataOffline();
   }
 
@@ -350,7 +485,7 @@
     const idEdit = document.getElementById('edit-id').value;
     
     const payload = {
-      jenisAlat: currentJenisAlat, // Memberitahu backend masuk ke sheet mana
+      jenisAlat: currentJenisAlat,
       tanggal: document.getElementById('tanggal').value,
       idUnit: document.getElementById('id-unit').value.toUpperCase(),
       namaKaryawan: document.getElementById('nama-karyawan').value,
@@ -381,7 +516,6 @@
     const btn = document.getElementById('btn-submit');
     btn.innerText = "Mengirim..."; btn.disabled = true;
 
-    // Untuk edit, tambahkan jenisAlat di level luar object agar mudah dibaca backend
     let requestBody = idEdit === "" ? { action: "tambah", data: [payload] } : { action: "edit", id: idEdit, jenisAlat: currentJenisAlat, ...payload };
 
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify(requestBody) })

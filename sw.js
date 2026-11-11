@@ -1,4 +1,4 @@
-const CACHE_NAME = 'p2h-cache-v18';
+const CACHE_NAME = 'p2h-cache-v19';
 const urlsToCache = [
   './',
   './index.html',

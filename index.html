@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>P2H DOZER Lengkap</title>
+  <title>P2H DOZER - Offline & Sync</title>
+  <link rel="manifest" href="manifest.json">
   <style>
     :root { --primary: #1a73e8; --bg: #f0f2f5; --card: #ffffff; --text: #202124; --border: #dadce0; }
     body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
@@ -23,9 +24,10 @@
     .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
     .radio-item, .checkbox-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; cursor: pointer; }
     
-    .action-btn { width: 100%; padding: 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; margin-bottom: 10px; color: white; }
+    .action-btn { width: 100%; padding: 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; margin-bottom: 10px; color: white; display: block; text-align: center;}
     .btn-submit { background: var(--primary); }
-    .btn-sync { background: #34a853; }
+    .btn-sync-online { background: #34a853; }
+    .btn-sync-offline { background: #f29900; display: none; } /* Tombol khusus data tertunda */
     .btn-back { background: #5f6368; width: auto; padding: 10px 15px; margin-bottom:15px;}
     
     .view-section { display: none; }
@@ -50,7 +52,11 @@
 
   <!-- BAGIAN FORM -->
   <div id="view-form" class="view-section view-active">
-    <button class="action-btn btn-sync" onclick="bacaDataServer()">📋 Buka Data Tersimpan (Online)</button>
+    
+    <!-- Tombol Sinkronisasi (Hanya muncul jika ada data nyangkut) -->
+    <button id="btn-sync-offline" class="action-btn btn-sync-offline" onclick="sinkronisasiDataOffline()">🔄 Kirim Data Offline (0)</button>
+    <button class="action-btn btn-sync-online" onclick="bacaDataServer()">📋 Buka Data Tersimpan (Online)</button>
+    
     <input type="hidden" id="edit-id" value="">
 
     <div class="question-card">
@@ -140,8 +146,13 @@
 </div>
 
 <script>
-  // GANTI URL INI
+  // GANTI URL INI DENGAN URL WEB APP GAS ANDA
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbx0psCB7xnXEoN0x_S6ea24Vr8ZQX-Nj2lxfn_qeXZpfFHBHaE_MUDOcve0vvcsfbeG-Q/exec'; 
+
+  // Inisialisasi Service Worker & Status Koneksi
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
 
   window.addEventListener('load', updateOnlineStatus);
   window.addEventListener('online', updateOnlineStatus);
@@ -151,7 +162,49 @@
     const badge = document.getElementById('status-koneksi');
     badge.innerText = navigator.onLine ? 'ONLINE' : 'OFFLINE';
     badge.className = navigator.onLine ? 'badge online' : 'badge offline';
+    cekDataOffline();
   }
+
+  // --- LOGIKA OFFLINE SYNC ---
+  function cekDataOffline() {
+    let dataTersimpan = JSON.parse(localStorage.getItem('p2hData')) || [];
+    const btnSync = document.getElementById('btn-sync-offline');
+    
+    // Munculkan tombol jika ada data di HP & HP sedang ada sinyal
+    if (dataTersimpan.length > 0 && navigator.onLine) {
+      btnSync.style.display = 'block';
+      btnSync.innerText = `🔄 Kirim Data Offline (${dataTersimpan.length})`;
+    } else {
+      btnSync.style.display = 'none';
+    }
+  }
+
+  function sinkronisasiDataOffline() {
+    let dataTersimpan = JSON.parse(localStorage.getItem('p2hData')) || [];
+    if (dataTersimpan.length === 0) return;
+
+    const btnSync = document.getElementById('btn-sync-offline');
+    btnSync.innerText = "Mengirim...";
+    btnSync.disabled = true;
+
+    // Kirim seluruh data yang menumpuk sekaligus
+    fetch(GAS_URL, {
+      method: 'POST', 
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+      body: JSON.stringify({ action: "tambah", data: dataTersimpan })
+    })
+    .then(res => res.json())
+    .then(res => {
+      alert(dataTersimpan.length + " Data offline berhasil masuk ke Server!");
+      localStorage.removeItem('p2hData'); // Hapus dari memori HP
+      cekDataOffline();
+    })
+    .catch(err => {
+      alert("Gagal sinkronisasi. Sinyal mungkin belum stabil.");
+    })
+    .finally(() => { btnSync.disabled = false; });
+  }
+  // ---------------------------
 
   function gantiLayar(idLayar) {
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('view-active'));
@@ -173,6 +226,7 @@
     const el = document.querySelector(`input[name="${name}"]:checked`);
     return el ? el.value : "";
   }
+  
   function setRadio(name, val) {
     document.querySelectorAll(`input[name="${name}"]`).forEach(el => el.checked = false);
     if(val) {
@@ -186,6 +240,7 @@
     document.querySelectorAll(`input[name="${name}"]:checked`).forEach(el => arr.push(el.value));
     return arr.join(", ");
   }
+  
   function setCheck(name, valStr) {
     document.querySelectorAll(`input[name="${name}"]`).forEach(el => el.checked = false);
     if(valStr) {
@@ -222,13 +277,22 @@
       smuSelesai: document.getElementById('smu-selesai').value
     };
 
+    // Validasi singkat
+    if(!payload.tanggal || !payload.idUnit || !payload.namaKaryawan || !payload.shift) {
+      return alert("Harap lengkapi semua isian yang wajib (*).");
+    }
+
+    // Jika sedang tidak ada sinyal (Offline)
     if(!navigator.onLine) {
-      if(idEdit !== "") return alert("Tidak bisa edit data saat offline.");
+      if(idEdit !== "") return alert("Tidak bisa edit data saat offline. Hanya bisa tambah baru.");
+      
       let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
       saved.push(payload);
       localStorage.setItem('p2hData', JSON.stringify(saved));
-      alert("Offline! Data ditampung di HP.");
+      
+      alert("Sedang Blank Spot! Data disimpan di memori HP. Klik tombol oranye 'Kirim Data Offline' jika sinyal sudah ada.");
       kosongkanForm();
+      cekDataOffline(); // Update tombol sync
       return;
     }
 
@@ -242,7 +306,7 @@
     })
     .then(res => res.json())
     .then(res => {
-      alert(idEdit === "" ? "Tersimpan!" : "Terupdate!");
+      alert(idEdit === "" ? "Tersimpan di Server!" : "Berhasil Diperbarui!");
       if(idEdit !== "") bacaDataServer();
       else kosongkanForm();
     })
@@ -250,7 +314,7 @@
   }
 
   function bacaDataServer() {
-    if(!navigator.onLine) return alert("Butuh internet untuk lihat data.");
+    if(!navigator.onLine) return alert("Butuh internet untuk melihat data dari server.");
     gantiLayar('view-data');
     document.getElementById('list-data').innerHTML = "<p align='center'>Memuat data dari server...</p>";
 
@@ -262,7 +326,6 @@
       if(!res.data || res.data.length === 0) return document.getElementById('list-data').innerHTML = "Belum ada data.";
       let html = "";
       res.data.reverse().forEach(item => {
-        // Enkripsi object ke string agar aman masuk fungsi onClick
         const dataJson = encodeURIComponent(JSON.stringify(item));
         html += `
           <div class="data-item">

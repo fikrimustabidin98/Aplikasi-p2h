@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>P2H DOZER PRO - CK DBA</title>
+  <title>P2H PRO - CK DBA</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    /* --- TEMA WARNA PERTAMBANGAN --- */
     :root { 
       --primary: #fbbc04; 
       --primary-dark: #f0a300;
@@ -21,7 +20,7 @@
     .container { max-width: 600px; margin: auto; padding: 15px; }
     
     .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 1px solid var(--border);}
-    .header-card { border-top: 8px solid var(--dark-gray); }
+    .header-card { border-top: 8px solid var(--dark-gray); display:flex; justify-content:space-between; align-items:center;}
     h1, h2 { margin: 0 0 10px 0; color: var(--dark-gray); }
     .title-field { font-weight: 600; margin-bottom: 10px; font-size: 15px;}
     .title-field span { color: #d93025; }
@@ -45,33 +44,24 @@
     .badge { padding: 5px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; text-align: center; margin-bottom:10px;}
     .online { background: #ceead6; color: #0d652d; } .offline { background: #fad2cf; color: #a50e0e; }
     
-    /* PENGATURAN DISPLAY LAYAR */
     .view-section { display: none; } 
     .view-active { display: block; }
     
-    /* --- TAMPILAN HALAMAN LOGIN --- */
+    /* LOGIN WRAPPER */
     .login-wrapper {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), 
-                  url('https://images.unsplash.com/photo-1578885136359-16c8bee4d81e?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat;
-      z-index: 1000;
-      flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1578885136359-16c8bee4d81e?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat;
+      z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
     }
-    
     #view-login.view-active { display: flex; } 
-    
-    .login-box {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px 25px;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 350px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      border-top: 8px solid var(--primary);
-    }
+    .login-box { background: rgba(255, 255, 255, 0.95); padding: 30px 25px; border-radius: 12px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-top: 8px solid var(--primary); }
     .login-logo { width: 160px; margin-bottom: 15px; object-fit: contain; }
     .copyright { margin-top: 25px; font-size: 12px; color: #888; font-weight: 600; letter-spacing: 0.5px; }
+
+    /* MENU GRID */
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;}
+    .menu-btn { background: #fff; border: 2px solid var(--dark-gray); padding: 25px 10px; border-radius: 8px; font-weight: bold; font-size: 15px; text-align: center; cursor: pointer; color: var(--dark-gray); transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+    .menu-btn:active { background: var(--primary); border-color: var(--primary); color: #000; transform: scale(0.95);}
 
     details { background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; border: 1px solid #e0e0e0; }
     summary { font-weight: bold; cursor: pointer; color: var(--dark-gray); outline: none; }
@@ -89,10 +79,8 @@
   <!-- ================= LAYAR LOGIN ================= -->
   <div id="view-login" class="view-section view-active login-wrapper">
     <div class="login-box">
-      <!-- Logo PT Cipta Kridatama -->
       <img src="https://www.ciptakridatama.co.id/file/site/logo-color.png" alt="Logo PT Cipta Kridatama" class="login-logo" onerror="this.src='https://via.placeholder.com/150x60?text=Logo+CK'">
-      
-      <h2 style="margin-bottom: 5px;">P2H DOZER</h2>
+      <h2 style="margin-bottom: 5px;">SISTEM P2H</h2>
       <p style="font-size: 13px; color: #666; margin-top: 0; margin-bottom: 20px;">Silakan masukkan PIN akses Anda</p>
       
       <div id="login-status" class="badge online" style="margin-bottom: 20px;">Memeriksa Internet...</div>
@@ -102,119 +90,139 @@
     </div>
   </div>
 
-
-<div class="container">
-  <!-- ================= LAYAR FORM P2H ================= -->
-  <div id="view-form" class="view-section">
-    <div class="card header-card" style="display:flex; justify-content:space-between; align-items:center;">
-      <div>
-        <h1 style="margin-bottom:5px;">P2H DOZER</h1>
-        <div id="status-koneksi" class="badge online" style="margin:0;">Memeriksa...</div>
+  <div class="container">
+    
+    <!-- ================= LAYAR MENU PILIH UNIT ================= -->
+    <div id="view-menu" class="view-section">
+      <div class="card header-card">
+        <div>
+          <h1 style="margin-bottom:5px;">PILIH UNIT P2H</h1>
+          <div id="status-koneksi-menu" class="badge online" style="margin:0;">Memeriksa...</div>
+        </div>
+        <div style="text-align:right;">
+          <span class="role-badge-display" style="font-size: 11px; background: #e8eaed; padding: 4px 8px; border-radius: 4px; font-weight: bold; display:block; margin-bottom:5px;">Role</span>
+          <button class="action-btn btn-gray" style="margin:0; font-size:11px; padding:6px 10px;" onclick="keluarAplikasi()">Logout</button>
+        </div>
       </div>
-      <div style="text-align:right;">
-        <span id="role-badge" style="font-size: 11px; background: #e8eaed; padding: 4px 8px; border-radius: 4px; font-weight: bold; display:block; margin-bottom:5px;">Role</span>
-        <button class="action-btn btn-gray" style="margin:0; font-size:11px; padding:6px 10px;" onclick="keluarAplikasi()">Logout</button>
+      
+      <button id="btn-sync-offline" class="action-btn btn-orange" style="display:none; margin-bottom: 20px;" onclick="sinkronisasiOffline()">🔄 Kirim Data Offline yang Tertunda</button>
+
+      <div class="menu-grid">
+        <button class="menu-btn" onclick="bukaFormAlat('DOZER')">🚜 DOZER</button>
+        <button class="menu-btn" onclick="bukaFormAlat('COMPACTOR')">🗜️ COMPACTOR</button>
+        <button class="menu-btn" onclick="bukaFormAlat('EXCAVATOR')">⛏️ EXCAVATOR</button>
+        <button class="menu-btn" onclick="bukaFormAlat('WT')">💧 WATER TRUCK</button>
+        <button class="menu-btn" onclick="bukaFormAlat('GRADER')">🛣️ GRADER</button>
+        <button class="menu-btn" onclick="bukaFormAlat('OHT')">🚛 OHT</button>
       </div>
     </div>
 
-    <button id="btn-sync-offline" class="action-btn btn-orange" style="display:none;" onclick="sinkronisasiOffline()">🔄 Kirim Data Offline (0)</button>
-    <button class="action-btn btn-green" onclick="bacaDataServer()">📋 Lihat Riwayat P2H (Search/Filter)</button>
-    <br><br>
-
-    <div class="card">
-      <input type="hidden" id="edit-id" value="">
+    <!-- ================= LAYAR FORM P2H ================= -->
+    <div id="view-form" class="view-section">
+      <button class="action-btn btn-gray" onclick="kembaliKeMenu()" style="margin-bottom: 10px;">🔙 Kembali ke Menu Utama</button>
       
-      <div class="title-field">Tanggal <span>*</span></div>
-      <input type="date" id="tanggal" required style="margin-bottom:15px;">
-
-      <div class="title-field">ID Unit <span>*</span></div>
-      <input type="text" id="id-unit" required style="margin-bottom:15px; text-transform:uppercase;">
-
-      <div class="title-field">Nama Karyawan (Otomatis)</div>
-      <input type="text" id="nama-karyawan" readonly style="margin-bottom:15px;">
-      
-      <div class="title-field">SN (Otomatis sesuai PIN)</div>
-      <input type="text" id="sn" readonly style="margin-bottom:15px;">
-      
-      <div class="title-field">Shift Kerja <span>*</span></div>
-      <div class="radio-group">
-        <label class="radio-item"><input type="radio" name="shift" value="DS (Day Shift)"> DS (Day Shift)</label>
-        <label class="radio-item"><input type="radio" name="shift" value="NS (Night Shift)"> NS (Night Shift)</label>
-      </div>
-      
-      <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P1) <span>*</span></div>
-      <div class="checkbox-group">
-        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Level Oli Engine (Kurang / di bawah minimal)"> [P1] Level Oli Engine (Kurang / di bawah minimal)</label>
-        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)"> [P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)</label>
-        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake"> [P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake</label>
-        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Indikator Warning: Gauge, Monitor display, Alarm"> [P1] Indikator Warning: Gauge, Monitor display, Alarm</label>
-        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Stiker Komisioning (Mati/Tidak ada)"> [P1] Stiker Komisioning (Mati/Tidak ada)</label>
-        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"> [P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder</label>
-        <label class="checkbox-item"><input type="checkbox" name="p1" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p1', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>
+      <div class="card header-card">
+        <h1 id="judul-form" style="margin:0;">P2H UNIT</h1>
       </div>
 
-      <div class="title-field">Detail Masalah / Temuan Lapangan (P1)</div>
-      <textarea id="detail-p1" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
+      <button class="action-btn btn-green" onclick="bacaDataServer()">📋 Lihat Riwayat P2H Unit Ini</button>
+      <br><br>
 
-      <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P2) <span>*</span></div>
-      <div class="checkbox-group">
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)"> [P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)"> [P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Kebocoran Cairan disekitar komponen utama"> [P2] Kebocoran Cairan disekitar komponen utama</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame"> [P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder"> [P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"> [P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll"> [P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Gangguan saat menghidupkan / mematikan engine"> [P2] Gangguan saat menghidupkan / mematikan engine</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Suara engine tidak normal / asap gas buang pekat"> [P2] Suara engine tidak normal / asap gas buang pekat</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break"> [P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)"> [P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)"> [P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)</label>
-        <label class="checkbox-item"><input type="checkbox" name="p2" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p2', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>
+      <div class="card">
+        <input type="hidden" id="edit-id" value="">
+        
+        <div class="title-field">Tanggal <span>*</span></div>
+        <input type="date" id="tanggal" required style="margin-bottom:15px;">
+
+        <div class="title-field">ID Unit <span>*</span></div>
+        <input type="text" id="id-unit" required style="margin-bottom:15px; text-transform:uppercase;">
+
+        <div class="title-field">Nama Karyawan (Otomatis)</div>
+        <input type="text" id="nama-karyawan" readonly style="margin-bottom:15px;">
+        
+        <div class="title-field">SN (Otomatis sesuai PIN)</div>
+        <input type="text" id="sn" readonly style="margin-bottom:15px;">
+        
+        <div class="title-field">Shift Kerja <span>*</span></div>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="shift" value="DS (Day Shift)"> DS (Day Shift)</label>
+          <label class="radio-item"><input type="radio" name="shift" value="NS (Night Shift)"> NS (Night Shift)</label>
+        </div>
+        
+        <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P1) <span>*</span></div>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Level Oli Engine (Kurang / di bawah minimal)"> [P1] Level Oli Engine (Kurang / di bawah minimal)</label>
+          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)"> [P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)</label>
+          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake"> [P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake</label>
+          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Indikator Warning: Gauge, Monitor display, Alarm"> [P1] Indikator Warning: Gauge, Monitor display, Alarm</label>
+          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Stiker Komisioning (Mati/Tidak ada)"> [P1] Stiker Komisioning (Mati/Tidak ada)</label>
+          <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"> [P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder</label>
+          <label class="checkbox-item"><input type="checkbox" name="p1" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p1', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>
+        </div>
+
+        <div class="title-field">Detail Masalah / Temuan Lapangan (P1)</div>
+        <textarea id="detail-p1" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
+
+        <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P2) <span>*</span></div>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)"> [P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)"> [P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Kebocoran Cairan disekitar komponen utama"> [P2] Kebocoran Cairan disekitar komponen utama</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame"> [P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder"> [P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"> [P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll"> [P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Gangguan saat menghidupkan / mematikan engine"> [P2] Gangguan saat menghidupkan / mematikan engine</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Suara engine tidak normal / asap gas buang pekat"> [P2] Suara engine tidak normal / asap gas buang pekat</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break"> [P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)"> [P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)"> [P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)</label>
+          <label class="checkbox-item"><input type="checkbox" name="p2" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p2', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>
+        </div>
+
+        <div class="title-field">Detail Masalah / Temuan Lapangan (P2)</div>
+        <textarea id="detail-p2" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
+        
+        <div class="title-field">Status Kelayakan Unit <span>*</span></div>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="status" value="Layak Dioperasikan"> 🟢 Layak Dioperasikan</label>
+          <label class="radio-item"><input type="radio" name="status" value="Tidak Layak Dioperasikan"> 🔴 Tidak Layak Dioperasikan</label>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+          <div style="flex:1;"><div class="title-field">SMU - MULAI <span>*</span></div><input type="number" id="smu-mulai"></div>
+          <div style="flex:1;"><div class="title-field">SMU - SELESAI</div><input type="number" id="smu-selesai"></div>
+        </div>
+
+        <button class="action-btn btn-mining" id="btn-submit" onclick="simpanAtauEdit()">KIRIM FORMULIR P2H</button>
       </div>
-
-      <div class="title-field">Detail Masalah / Temuan Lapangan (P2)</div>
-      <textarea id="detail-p2" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
-      
-      <div class="title-field">Status Kelayakan Unit <span>*</span></div>
-      <div class="radio-group">
-        <label class="radio-item"><input type="radio" name="status" value="Layak Dioperasikan"> 🟢 Layak Dioperasikan</label>
-        <label class="radio-item"><input type="radio" name="status" value="Tidak Layak Dioperasikan"> 🔴 Tidak Layak Dioperasikan</label>
-      </div>
-
-      <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <div style="flex:1;"><div class="title-field">SMU - MULAI <span>*</span></div><input type="number" id="smu-mulai"></div>
-        <div style="flex:1;"><div class="title-field">SMU - SELESAI</div><input type="number" id="smu-selesai"></div>
-      </div>
-
-      <button class="action-btn btn-mining" id="btn-submit" onclick="simpanAtauEdit()">KIRIM FORMULIR P2H</button>
     </div>
+
+    <!-- ================= LAYAR DATA & PENCARIAN ================= -->
+    <div id="view-data" class="view-section">
+      <button class="action-btn btn-gray" onclick="gantiLayar('view-form')">🔙 Kembali ke Form</button>
+      <div class="card">
+        <h2 id="judul-riwayat" style="font-size:18px; margin-bottom:15px;">Riwayat P2H</h2>
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="Cari Unit / Nama..." onkeyup="filterTabel()">
+          <select id="filter-status" onchange="filterTabel()">
+            <option value="ALL">Filter Status</option>
+            <option value="Layak">Layak Operasi</option>
+            <option value="Tidak">Tidak Layak</option>
+          </select>
+        </div>
+        <div id="list-data"></div>
+      </div>
+    </div>
+
   </div>
-
-  <!-- ================= LAYAR DATA & PENCARIAN ================= -->
-  <div id="view-data" class="view-section">
-    <button class="action-btn btn-gray" onclick="gantiLayar('view-form')">🔙 Kembali ke Form</button>
-    <div class="card">
-      <h2 style="font-size:18px; margin-bottom:15px;">Riwayat P2H</h2>
-      <div class="search-box">
-        <input type="text" id="search-input" placeholder="Cari Unit / Nama..." onkeyup="filterTabel()">
-        <select id="filter-status" onchange="filterTabel()">
-          <option value="ALL">Filter Status</option>
-          <option value="Layak">Layak Operasi</option>
-          <option value="Tidak">Tidak Layak</option>
-        </select>
-      </div>
-      <div id="list-data"></div>
-    </div>
-  </div>
-
-</div>
 
 <script>
-  // === GANTI URL INI DENGAN URL WEB APP GAS ANDA ===
+  // === GANTI URL INI ===
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbx0psCB7xnXEoN0x_S6ea24Vr8ZQX-Nj2lxfn_qeXZpfFHBHaE_MUDOcve0vvcsfbeG-Q/exec'; 
   
   let currentUser = null; 
+  let currentJenisAlat = ""; // Menyimpan unit yang sedang dipilih user
   let dataRiwayat = []; 
 
   window.onload = () => {
@@ -222,7 +230,7 @@
     const savedUser = localStorage.getItem('p2h_user');
     if (savedUser) {
       currentUser = JSON.parse(savedUser);
-      masukApp();
+      masukKeMenuUtama();
     }
   };
 
@@ -240,7 +248,7 @@
       if (res.status === "sukses") {
         currentUser = { nama: res.nama, role: res.role, pin: pin }; 
         localStorage.setItem('p2h_user', JSON.stringify(currentUser));
-        masukApp();
+        masukKeMenuUtama();
       } else {
         alert(res.pesan);
         document.getElementById('pin-input').value = "";
@@ -249,19 +257,36 @@
     .finally(() => { btn.innerText = "MASUK APLIKASI"; btn.disabled = false; });
   }
 
-  function masukApp() {
-    document.getElementById('role-badge').innerText = `👤 ${currentUser.nama} (${currentUser.role})`;
+  function masukKeMenuUtama() {
+    document.querySelectorAll('.role-badge-display').forEach(el => el.innerText = `👤 ${currentUser.nama} (${currentUser.role})`);
+    document.getElementById('pin-input').value = "";
+    
+    // Setel variabel otomatis
     document.getElementById('nama-karyawan').value = currentUser.nama; 
     document.getElementById('sn').value = currentUser.pin; 
-    document.getElementById('pin-input').value = "";
+    
+    gantiLayar('view-menu');
+    window.scrollTo(0,0);
+  }
+
+  function bukaFormAlat(jenisAlat) {
+    currentJenisAlat = jenisAlat;
+    document.getElementById('judul-form').innerText = `P2H ${jenisAlat}`;
+    document.getElementById('judul-riwayat').innerText = `Riwayat P2H ${jenisAlat}`;
     gantiLayar('view-form');
     window.scrollTo(0,0);
+  }
+  
+  function kembaliKeMenu() {
+    kosongkanForm();
+    gantiLayar('view-menu');
   }
 
   function keluarAplikasi() {
     if(!confirm("Yakin ingin keluar dari akun ini?")) return;
     localStorage.removeItem('p2h_user');
     currentUser = null;
+    currentJenisAlat = "";
     gantiLayar('view-login');
   }
 
@@ -270,13 +295,17 @@
   window.addEventListener('offline', updateOnlineStatus);
 
   function updateOnlineStatus() {
-    const b1 = document.getElementById('status-koneksi');
-    const b2 = document.getElementById('login-status');
     const statusTxt = navigator.onLine ? '🟢 ONLINE' : '🔴 OFFLINE';
     const statusClass = navigator.onLine ? 'badge online' : 'badge offline';
     
-    if(b1) { b1.innerText = statusTxt; b1.className = statusClass; }
-    if(b2) { b2.innerText = statusTxt; b2.className = statusClass; }
+    document.getElementById('login-status').innerText = statusTxt; document.getElementById('login-status').className = statusClass;
+    document.getElementById('status-koneksi-menu').innerText = statusTxt; document.getElementById('status-koneksi-menu').className = statusClass;
+    
+    // Element mungkin belum render, jadi gunakan opsional chaining
+    if(document.getElementById('status-koneksi')) {
+      document.getElementById('status-koneksi').innerText = statusTxt; 
+      document.getElementById('status-koneksi').className = statusClass;
+    }
     cekDataOffline();
   }
 
@@ -321,6 +350,7 @@
     const idEdit = document.getElementById('edit-id').value;
     
     const payload = {
+      jenisAlat: currentJenisAlat, // Memberitahu backend masuk ke sheet mana
       tanggal: document.getElementById('tanggal').value,
       idUnit: document.getElementById('id-unit').value.toUpperCase(),
       namaKaryawan: document.getElementById('nama-karyawan').value,
@@ -345,19 +375,20 @@
       saved.push(payload);
       localStorage.setItem('p2hData', JSON.stringify(saved));
       alert("Tersimpan Offline! Data akan tertunda. Klik tombol oranye 'Kirim Data Offline' setelah sinyal kembali.");
-      kosongkanForm(); cekDataOffline(); return;
+      kosongkanForm(); cekDataOffline(); gantiLayar('view-menu'); return;
     }
 
     const btn = document.getElementById('btn-submit');
     btn.innerText = "Mengirim..."; btn.disabled = true;
 
-    fetch(GAS_URL, {
-      method: 'POST', body: JSON.stringify(idEdit === "" ? { action: "tambah", data: [payload] } : { action: "edit", id: idEdit, ...payload })
-    })
+    // Untuk edit, tambahkan jenisAlat di level luar object agar mudah dibaca backend
+    let requestBody = idEdit === "" ? { action: "tambah", data: [payload] } : { action: "edit", id: idEdit, jenisAlat: currentJenisAlat, ...payload };
+
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify(requestBody) })
     .then(res => res.json())
     .then(() => { 
-      alert(idEdit === "" ? "Formulir P2H berhasil dikirim!" : "Perubahan berhasil disimpan!"); 
-      idEdit !== "" ? bacaDataServer() : kosongkanForm(); 
+      alert(idEdit === "" ? `Formulir P2H ${currentJenisAlat} berhasil dikirim!` : "Perubahan berhasil disimpan!"); 
+      idEdit !== "" ? bacaDataServer() : (kosongkanForm(), gantiLayar('view-menu')); 
     })
     .finally(() => { btn.innerText = "KIRIM FORMULIR P2H"; btn.disabled = false; });
   }
@@ -367,7 +398,7 @@
     gantiLayar('view-data');
     document.getElementById('list-data').innerHTML = "<p style='text-align:center; color:gray;'>Sedang mengambil data...</p>";
 
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "baca" }) })
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "baca", jenisAlat: currentJenisAlat }) })
     .then(res => res.json())
     .then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
   }
@@ -417,7 +448,7 @@
           </div>`;
       }
     });
-    box.innerHTML = html || "<p style='text-align:center; color:gray;'>Tidak ada data ditemukan.</p>";
+    box.innerHTML = html || "<p style='text-align:center; color:gray;'>Tidak ada data ditemukan di unit ini.</p>";
   }
 
   function siapkanEdit(dataStr) {
@@ -440,7 +471,7 @@
 
   function hapusData(id) {
     if(!confirm("Yakin hapus data ini secara permanen?")) return;
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "hapus", id: id }) })
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "hapus", id: id, jenisAlat: currentJenisAlat }) })
     .then(res => res.json()).then(() => bacaDataServer());
   }
 
@@ -457,7 +488,7 @@
     const btn = document.getElementById('btn-sync-offline');
     btn.innerText = "Mengirim..."; btn.disabled = true;
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "tambah", data: saved }) })
-    .then(res => res.json()).then(() => { alert("Terkirim ke Server!"); localStorage.removeItem('p2hData'); cekDataOffline(); })
+    .then(res => res.json()).then(() => { alert("Seluruh data tertunda terkirim ke Server!"); localStorage.removeItem('p2hData'); cekDataOffline(); })
     .finally(() => btn.disabled = false);
   }
 
@@ -469,7 +500,6 @@
     document.getElementById('detail-p2').value = "";
     document.getElementById('smu-mulai').value = "";
     document.getElementById('smu-selesai').value = "";
-    window.scrollTo(0,0);
   }
   
   function gantiLayar(idLayar) {

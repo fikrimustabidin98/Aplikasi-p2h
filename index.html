@@ -90,4 +90,392 @@
   <div id="view-login" class="view-section view-active login-wrapper">
     <div class="login-box">
       <!-- Logo PT Cipta Kridatama -->
-      <img src="https://www.ciptakridatama.co.id/file/site/logo-color.png" alt="Logo PT Cipta Kridatama" class="login-logo" onerror="this.src='
+      <img src="https://www.ciptakridatama.co.id/file/site/logo-color.png" alt="Logo PT Cipta Kridatama" class="login-logo" onerror="this.src='https://via.placeholder.com/150x60?text=Logo+CK'">
+      
+      <h2 style="margin-bottom: 5px;">P2H DOZER</h2>
+      <p style="font-size: 13px; color: #666; margin-top: 0; margin-bottom: 20px;">Silakan masukkan PIN akses Anda</p>
+      
+      <div id="login-status" class="badge online" style="margin-bottom: 20px;">Memeriksa Internet...</div>
+      <input type="password" id="pin-input" placeholder="•••••" style="text-align:center; font-size:24px; letter-spacing: 8px; margin-bottom: 15px; background: #fff; border: 2px solid #ccc;">
+      <button id="btn-login" class="action-btn btn-mining" onclick="prosesLogin()">MASUK APLIKASI</button>
+      <div class="copyright">&copy; Manpower CK DBA - 2026</div>
+    </div>
+  </div>
+
+
+<div class="container">
+  <!-- ================= LAYAR FORM P2H ================= -->
+  <div id="view-form" class="view-section">
+    <div class="card header-card" style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <h1 style="margin-bottom:5px;">P2H DOZER</h1>
+        <div id="status-koneksi" class="badge online" style="margin:0;">Memeriksa...</div>
+      </div>
+      <div style="text-align:right;">
+        <span id="role-badge" style="font-size: 11px; background: #e8eaed; padding: 4px 8px; border-radius: 4px; font-weight: bold; display:block; margin-bottom:5px;">Role</span>
+        <button class="action-btn btn-gray" style="margin:0; font-size:11px; padding:6px 10px;" onclick="keluarAplikasi()">Logout</button>
+      </div>
+    </div>
+
+    <button id="btn-sync-offline" class="action-btn btn-orange" style="display:none;" onclick="sinkronisasiOffline()">🔄 Kirim Data Offline (0)</button>
+    <button class="action-btn btn-green" onclick="bacaDataServer()">📋 Lihat Riwayat P2H (Search/Filter)</button>
+    <br><br>
+
+    <div class="card">
+      <input type="hidden" id="edit-id" value="">
+      
+      <div class="title-field">Tanggal <span>*</span></div>
+      <input type="date" id="tanggal" required style="margin-bottom:15px;">
+
+      <div class="title-field">ID Unit <span>*</span></div>
+      <input type="text" id="id-unit" required style="margin-bottom:15px; text-transform:uppercase;">
+
+      <div class="title-field">Nama Karyawan (Otomatis)</div>
+      <input type="text" id="nama-karyawan" readonly style="margin-bottom:15px;">
+      
+      <div class="title-field">SN (Otomatis sesuai PIN)</div>
+      <input type="text" id="sn" readonly style="margin-bottom:15px;">
+      
+      <div class="title-field">Shift Kerja <span>*</span></div>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="shift" value="DS (Day Shift)"> DS (Day Shift)</label>
+        <label class="radio-item"><input type="radio" name="shift" value="NS (Night Shift)"> NS (Night Shift)</label>
+      </div>
+      
+      <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P1) <span>*</span></div>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Level Oli Engine (Kurang / di bawah minimal)"> [P1] Level Oli Engine (Kurang / di bawah minimal)</label>
+        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)"> [P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)</label>
+        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake"> [P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake</label>
+        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Indikator Warning: Gauge, Monitor display, Alarm"> [P1] Indikator Warning: Gauge, Monitor display, Alarm</label>
+        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Stiker Komisioning (Mati/Tidak ada)"> [P1] Stiker Komisioning (Mati/Tidak ada)</label>
+        <label class="checkbox-item"><input type="checkbox" name="p1" value="[P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"> [P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder</label>
+        <label class="checkbox-item"><input type="checkbox" name="p1" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p1', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>
+      </div>
+
+      <div class="title-field">Detail Masalah / Temuan Lapangan (P1)</div>
+      <textarea id="detail-p1" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
+
+      <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P2) <span>*</span></div>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)"> [P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)"> [P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Kebocoran Cairan disekitar komponen utama"> [P2] Kebocoran Cairan disekitar komponen utama</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame"> [P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder"> [P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"> [P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll"> [P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Gangguan saat menghidupkan / mematikan engine"> [P2] Gangguan saat menghidupkan / mematikan engine</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Suara engine tidak normal / asap gas buang pekat"> [P2] Suara engine tidak normal / asap gas buang pekat</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break"> [P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)"> [P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="[P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)"> [P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)</label>
+        <label class="checkbox-item"><input type="checkbox" name="p2" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p2', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>
+      </div>
+
+      <div class="title-field">Detail Masalah / Temuan Lapangan (P2)</div>
+      <textarea id="detail-p2" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
+      
+      <div class="title-field">Status Kelayakan Unit <span>*</span></div>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="status" value="Layak Dioperasikan"> 🟢 Layak Dioperasikan</label>
+        <label class="radio-item"><input type="radio" name="status" value="Tidak Layak Dioperasikan"> 🔴 Tidak Layak Dioperasikan</label>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <div style="flex:1;"><div class="title-field">SMU - MULAI <span>*</span></div><input type="number" id="smu-mulai"></div>
+        <div style="flex:1;"><div class="title-field">SMU - SELESAI</div><input type="number" id="smu-selesai"></div>
+      </div>
+
+      <button class="action-btn btn-mining" id="btn-submit" onclick="simpanAtauEdit()">KIRIM FORMULIR P2H</button>
+    </div>
+  </div>
+
+  <!-- ================= LAYAR DATA & PENCARIAN ================= -->
+  <div id="view-data" class="view-section">
+    <button class="action-btn btn-gray" onclick="gantiLayar('view-form')">🔙 Kembali ke Form</button>
+    <div class="card">
+      <h2 style="font-size:18px; margin-bottom:15px;">Riwayat P2H</h2>
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Cari Unit / Nama..." onkeyup="filterTabel()">
+        <select id="filter-status" onchange="filterTabel()">
+          <option value="ALL">Filter Status</option>
+          <option value="Layak">Layak Operasi</option>
+          <option value="Tidak">Tidak Layak</option>
+        </select>
+      </div>
+      <div id="list-data"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // === GANTI URL INI DENGAN URL WEB APP GAS ANDA ===
+  const GAS_URL = 'PASTE_URL_WEB_APP_ANDA_DI_SINI'; 
+  
+  let currentUser = null; 
+  let dataRiwayat = []; 
+
+  window.onload = () => {
+    updateOnlineStatus();
+    const savedUser = localStorage.getItem('p2h_user');
+    if (savedUser) {
+      currentUser = JSON.parse(savedUser);
+      masukApp();
+    }
+  };
+
+  function prosesLogin() {
+    const pin = document.getElementById('pin-input').value;
+    if (!pin) return alert("Masukkan PIN!");
+    if (!navigator.onLine) return alert("Anda sedang offline. Butuh internet untuk login pertama kali.");
+
+    const btn = document.getElementById('btn-login');
+    btn.innerText = "MENCOCOKKAN..."; btn.disabled = true;
+
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "login", pin: pin }) })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === "sukses") {
+        currentUser = { nama: res.nama, role: res.role, pin: pin }; 
+        localStorage.setItem('p2h_user', JSON.stringify(currentUser));
+        masukApp();
+      } else {
+        alert(res.pesan);
+        document.getElementById('pin-input').value = "";
+      }
+    })
+    .finally(() => { btn.innerText = "MASUK APLIKASI"; btn.disabled = false; });
+  }
+
+  function masukApp() {
+    document.getElementById('role-badge').innerText = `👤 ${currentUser.nama} (${currentUser.role})`;
+    document.getElementById('nama-karyawan').value = currentUser.nama; 
+    document.getElementById('sn').value = currentUser.pin; 
+    document.getElementById('pin-input').value = "";
+    gantiLayar('view-form');
+    window.scrollTo(0,0);
+  }
+
+  function keluarAplikasi() {
+    if(!confirm("Yakin ingin keluar dari akun ini?")) return;
+    localStorage.removeItem('p2h_user');
+    currentUser = null;
+    gantiLayar('view-login');
+  }
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+
+  function updateOnlineStatus() {
+    const b1 = document.getElementById('status-koneksi');
+    const b2 = document.getElementById('login-status');
+    const statusTxt = navigator.onLine ? '🟢 ONLINE' : '🔴 OFFLINE';
+    const statusClass = navigator.onLine ? 'badge online' : 'badge offline';
+    
+    if(b1) { b1.innerText = statusTxt; b1.className = statusClass; }
+    if(b2) { b2.innerText = statusTxt; b2.className = statusClass; }
+    cekDataOffline();
+  }
+
+  function toggleLainnya(groupName, el) {
+    if(el.checked) {
+      document.querySelectorAll(`input[name="${groupName}"]`).forEach(cb => {
+        if(cb !== el) cb.checked = false;
+      });
+    }
+  }
+
+  function getRadio(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : "";
+  }
+  
+  function setRadio(name, val) {
+    document.querySelectorAll(`input[name="${name}"]`).forEach(el => el.checked = false);
+    if(val) {
+      const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+      if(el) el.checked = true;
+    }
+  }
+
+  function getCheck(name) {
+    let arr = [];
+    document.querySelectorAll(`input[name="${name}"]:checked`).forEach(el => arr.push(el.value));
+    return arr.join(", ");
+  }
+  
+  function setCheck(name, valStr) {
+    document.querySelectorAll(`input[name="${name}"]`).forEach(el => el.checked = false);
+    if(valStr) {
+      valStr.split(", ").forEach(val => {
+        const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+        if(el) el.checked = true;
+      });
+    }
+  }
+
+  function simpanAtauEdit() {
+    const idEdit = document.getElementById('edit-id').value;
+    
+    const payload = {
+      tanggal: document.getElementById('tanggal').value,
+      idUnit: document.getElementById('id-unit').value.toUpperCase(),
+      namaKaryawan: document.getElementById('nama-karyawan').value,
+      sn: document.getElementById('sn').value,
+      shift: getRadio('shift'),
+      p1: getCheck('p1'),
+      detailP1: document.getElementById('detail-p1').value,
+      p2: getCheck('p2'),
+      detailP2: document.getElementById('detail-p2').value,
+      statusUnit: getRadio('status'),
+      smuMulai: document.getElementById('smu-mulai').value,
+      smuSelesai: document.getElementById('smu-selesai').value
+    };
+
+    if(!payload.tanggal || !payload.idUnit || !payload.shift || !payload.p1 || !payload.p2 || !payload.statusUnit || !payload.smuMulai) {
+       return alert("Gagal: Mohon lengkapi semua isian wajib yang bertanda bintang (*)");
+    }
+
+    if(!navigator.onLine) {
+      if(idEdit !== "") return alert("Peringatan: Tidak bisa mengedit data server saat offline.");
+      let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
+      saved.push(payload);
+      localStorage.setItem('p2hData', JSON.stringify(saved));
+      alert("Tersimpan Offline! Data akan tertunda. Klik tombol oranye 'Kirim Data Offline' setelah sinyal kembali.");
+      kosongkanForm(); cekDataOffline(); return;
+    }
+
+    const btn = document.getElementById('btn-submit');
+    btn.innerText = "Mengirim..."; btn.disabled = true;
+
+    fetch(GAS_URL, {
+      method: 'POST', body: JSON.stringify(idEdit === "" ? { action: "tambah", data: [payload] } : { action: "edit", id: idEdit, ...payload })
+    })
+    .then(res => res.json())
+    .then(() => { 
+      alert(idEdit === "" ? "Formulir P2H berhasil dikirim!" : "Perubahan berhasil disimpan!"); 
+      idEdit !== "" ? bacaDataServer() : kosongkanForm(); 
+    })
+    .finally(() => { btn.innerText = "KIRIM FORMULIR P2H"; btn.disabled = false; });
+  }
+
+  function bacaDataServer() {
+    if(!navigator.onLine) return alert("Gagal: Butuh internet untuk memuat riwayat server.");
+    gantiLayar('view-data');
+    document.getElementById('list-data').innerHTML = "<p style='text-align:center; color:gray;'>Sedang mengambil data...</p>";
+
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "baca" }) })
+    .then(res => res.json())
+    .then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
+  }
+
+  function filterTabel() {
+    const searchTxt = document.getElementById('search-input').value.toLowerCase();
+    const filterStat = document.getElementById('filter-status').value;
+    const box = document.getElementById('list-data');
+    let html = "";
+    
+    dataRiwayat.forEach(item => {
+      if ((item.idUnit.toLowerCase().includes(searchTxt) || item.namaKaryawan.toLowerCase().includes(searchTxt)) && 
+          (filterStat === "ALL" || item.statusUnit.includes(filterStat))) {
+        
+        const btnHapusHTML = currentUser.role === 'Admin' ? `<button class="btn-hapus" onclick="hapusData('${item.id}')">Hapus</button>` : '';
+        const dataJson = encodeURIComponent(JSON.stringify(item));
+        const warnaStatus = item.statusUnit.includes('Tidak') ? '#d93025' : '#0d652d';
+        
+        html += `
+          <div class="data-item">
+            <div style="font-weight:bold; color:var(--dark-gray); font-size:16px; margin-bottom:5px;">
+              ${item.idUnit} <span style="float:right; color:${warnaStatus}; font-size:13px;">${item.statusUnit}</span>
+            </div>
+            <div style="font-size:13px; color:#5f6368; line-height:1.6; margin-bottom:10px;">
+              Tgl: ${item.tanggal.split('T')[0]} | Shift: ${item.shift}<br>
+              Opr: ${item.namaKaryawan} (SN: ${item.sn})<br>
+              SMU: ${item.smuMulai} s/d ${item.smuSelesai || '-'}<br>
+            </div>
+            
+            <details>
+              <summary>Lihat Hasil Ceklis P2H</summary>
+              <div class="hasil-box">
+                <div style="color:#d93025; font-weight:bold;">[P1] Kelainan Utama:</div>
+                <div style="margin-bottom:8px;">${item.p1 || '-'}</div>
+                <div style="color:gray;"><i>Catatan: ${item.detailP1 || '-'}</i></div>
+                <br>
+                <div style="color:#f29900; font-weight:bold;">[P2] Kelainan Fisik/Fungsi:</div>
+                <div style="margin-bottom:8px;">${item.p2 || '-'}</div>
+                <div style="color:gray;"><i>Catatan: ${item.detailP2 || '-'}</i></div>
+              </div>
+            </details>
+
+            <div class="btn-group">
+              <button class="btn-edit" onclick="siapkanEdit('${dataJson}')">Edit / Update</button>
+              ${btnHapusHTML}
+            </div>
+          </div>`;
+      }
+    });
+    box.innerHTML = html || "<p style='text-align:center; color:gray;'>Tidak ada data ditemukan.</p>";
+  }
+
+  function siapkanEdit(dataStr) {
+    const item = JSON.parse(decodeURIComponent(dataStr));
+    document.getElementById('edit-id').value = item.id;
+    document.getElementById('tanggal').value = item.tanggal.split('T')[0];
+    document.getElementById('id-unit').value = item.idUnit;
+    
+    setRadio('shift', item.shift);
+    setCheck('p1', item.p1);
+    document.getElementById('detail-p1').value = item.detailP1;
+    setCheck('p2', item.p2);
+    document.getElementById('detail-p2').value = item.detailP2;
+    setRadio('status', item.statusUnit);
+    
+    document.getElementById('smu-mulai').value = item.smuMulai;
+    document.getElementById('smu-selesai').value = item.smuSelesai;
+    gantiLayar('view-form'); window.scrollTo(0,0);
+  }
+
+  function hapusData(id) {
+    if(!confirm("Yakin hapus data ini secara permanen?")) return;
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "hapus", id: id }) })
+    .then(res => res.json()).then(() => bacaDataServer());
+  }
+
+  function cekDataOffline() {
+    let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
+    const btn = document.getElementById('btn-sync-offline');
+    if (saved.length > 0 && navigator.onLine && currentUser) {
+      btn.style.display = 'block'; btn.innerText = `🔄 Kirim Data Offline (${saved.length})`;
+    } else { btn.style.display = 'none'; }
+  }
+
+  function sinkronisasiOffline() {
+    let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
+    const btn = document.getElementById('btn-sync-offline');
+    btn.innerText = "Mengirim..."; btn.disabled = true;
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "tambah", data: saved }) })
+    .then(res => res.json()).then(() => { alert("Terkirim ke Server!"); localStorage.removeItem('p2hData'); cekDataOffline(); })
+    .finally(() => btn.disabled = false);
+  }
+
+  function kosongkanForm() {
+    document.getElementById('edit-id').value = "";
+    document.getElementById('id-unit').value = "";
+    setRadio('shift', ""); setCheck('p1', ""); setCheck('p2', ""); setRadio('status', "");
+    document.getElementById('detail-p1').value = "";
+    document.getElementById('detail-p2').value = "";
+    document.getElementById('smu-mulai').value = "";
+    document.getElementById('smu-selesai').value = "";
+    window.scrollTo(0,0);
+  }
+  
+  function gantiLayar(idLayar) {
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('view-active'));
+    document.getElementById(idLayar).classList.add('view-active');
+  }
+</script>
+</body>
+</html>

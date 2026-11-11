@@ -8,7 +8,7 @@
   <style>
     /* --- TEMA WARNA PERTAMBANGAN --- */
     :root { 
-      --primary: #fbbc04; /* Kuning Alat Berat */
+      --primary: #fbbc04; 
       --primary-dark: #f0a300;
       --bg: #f4f6f9; 
       --card: #ffffff; 
@@ -26,7 +26,7 @@
     .title-field { font-weight: 600; margin-bottom: 10px; font-size: 15px;}
     .title-field span { color: #d93025; }
     
-    input[type="text"], input[type="password"], input[type="date"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 14px;}
+    input[type="text"], input[type="password"], input[type="date"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 14px;}
     input[readonly] { background-color: #e8eaed; font-weight: bold; color: #5f6368; outline: none;}
     input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(251, 188, 4, 0.2); }
 
@@ -45,19 +45,22 @@
     .badge { padding: 5px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; text-align: center; margin-bottom:10px;}
     .online { background: #ceead6; color: #0d652d; } .offline { background: #fad2cf; color: #a50e0e; }
     
+    /* PENGATURAN DISPLAY LAYAR */
     .view-section { display: none; } 
     .view-active { display: block; }
     
-    /* --- UI KHUSUS HALAMAN LOGIN (TEMA PERTAMBANGAN) --- */
+    /* --- PERBAIKAN BUG LOGIN --- */
     .login-wrapper {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      /* Gambar background tambang/alat berat dengan efek gelap (overlay) */
       background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), 
                   url('https://images.unsplash.com/photo-1578885136359-16c8bee4d81e?q=80&w=1000&auto=format&fit=crop') center/cover no-repeat;
       z-index: 1000;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+      /* display: flex DIHAPUS DARI SINI */
+      flex-direction: column; align-items: center; justify-content: center; padding: 20px;
     }
-    #view-login.view-active { display: flex; } /* Memastikan login memakai flexbox saat aktif */
+    
+    /* Flex hanya aktif saat login page berstatus view-active */
+    #view-login.view-active { display: flex; } 
     
     .login-box {
       background: rgba(255, 255, 255, 0.95);
@@ -67,22 +70,11 @@
       max-width: 350px;
       text-align: center;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      border-top: 8px solid var(--primary); /* Aksen kuning di atas kartu */
+      border-top: 8px solid var(--primary);
     }
-    .login-logo {
-      width: 120px;
-      margin-bottom: 15px;
-      object-fit: contain;
-    }
-    .copyright {
-      margin-top: 25px;
-      font-size: 12px;
-      color: #888;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
+    .login-logo { width: 120px; margin-bottom: 15px; object-fit: contain; }
+    .copyright { margin-top: 25px; font-size: 12px; color: #888; font-weight: 600; letter-spacing: 0.5px; }
 
-    /* Style untuk Akordion Hasil P2H */
     details { background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; border: 1px solid #e0e0e0; }
     summary { font-weight: bold; cursor: pointer; color: var(--dark-gray); outline: none; }
     .hasil-box { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc; line-height: 1.6;}
@@ -99,19 +91,13 @@
   <!-- ================= LAYAR LOGIN ================= -->
   <div id="view-login" class="view-section view-active login-wrapper">
     <div class="login-box">
-      
-      <!-- LOGO PT CIPTA KRIDATAMA (Silakan ganti URL di src= dengan link logo asli jika punya) -->
       <img src="https://upload.wikimedia.org/wikipedia/id/thumb/0/05/Logo_ABM_Investama.png/320px-Logo_ABM_Investama.png" alt="Logo CK" class="login-logo" onerror="this.src='https://via.placeholder.com/150x60?text=Logo+CK'">
-      
       <h2 style="margin-bottom: 5px;">P2H DOZER</h2>
       <p style="font-size: 13px; color: #666; margin-top: 0; margin-bottom: 20px;">Silakan masukkan PIN akses Anda</p>
       
       <div id="login-status" class="badge online" style="margin-bottom: 20px;">Memeriksa Internet...</div>
-      
       <input type="password" id="pin-input" placeholder="•••••" style="text-align:center; font-size:24px; letter-spacing: 8px; margin-bottom: 15px; background: #fff; border: 2px solid #ccc;">
-      
       <button id="btn-login" class="action-btn btn-mining" onclick="prosesLogin()">MASUK APLIKASI</button>
-      
       <div class="copyright">&copy; Manpower CK DBA - 2026</div>
     </div>
   </div>

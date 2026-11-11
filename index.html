@@ -7,13 +7,11 @@
   <link rel="manifest" href="manifest.json">
   <style>
     :root { 
-      --primary: #fbbc04; 
-      --primary-dark: #f0a300;
-      --bg: #f4f6f9; 
-      --card: #ffffff; 
-      --text: #202124; 
-      --border: #dadce0; 
-      --dark-gray: #343a40;
+      --primary: #fbbc04; --primary-dark: #f0a300;
+      --bg: #f4f6f9; --card: #ffffff; 
+      --text: #202124; --border: #dadce0; --dark-gray: #343a40;
+      --normal: #ceead6; --normal-text: #0d652d;
+      --abnormal: #fad2cf; --abnormal-text: #a50e0e;
     }
     
     body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); padding: 0; margin: 0; }
@@ -27,20 +25,18 @@
     
     input[type="text"], input[type="password"], input[type="date"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 14px;}
     input[readonly] { background-color: #e8eaed; font-weight: bold; color: #5f6368; outline: none;}
-    input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(251, 188, 4, 0.2); }
-
-    .action-btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: #000; margin-top: 10px; transition: 0.2s;}
+    
+    .action-btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s;}
     .action-btn:active { transform: scale(0.98); }
     .btn-mining { background: var(--primary); color: #000; } 
-    .btn-mining:hover { background: var(--primary-dark); }
     .btn-green { background: #34a853; color: white;} 
     .btn-orange { background: #f29900; color: white;} 
     .btn-blue { background: #1a73e8; color: white;} 
     .btn-gray { background: #5f6368; color: white; width: auto; padding: 10px;}
     
-    .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-    .radio-item, .checkbox-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; cursor: pointer;}
-    input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; margin: 0; flex-shrink: 0; accent-color: var(--dark-gray);}
+    .radio-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+    .radio-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; cursor: pointer;}
+    input[type="radio"] { width: 18px; height: 18px; margin: 0; accent-color: var(--dark-gray);}
     
     .badge { padding: 5px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; text-align: center; margin-bottom:10px;}
     .online { background: #ceead6; color: #0d652d; } .offline { background: #fad2cf; color: #a50e0e; }
@@ -52,22 +48,32 @@
     #view-login.view-active { display: flex; } 
     .login-box { background: rgba(255, 255, 255, 0.95); padding: 30px 25px; border-radius: 12px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-top: 8px solid var(--primary); }
     .login-logo { width: 160px; margin-bottom: 15px; object-fit: contain; }
-    .copyright { margin-top: 25px; font-size: 12px; color: #888; font-weight: 600; letter-spacing: 0.5px; }
-
-    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;}
-    .menu-btn { background: #fff; border: 2px solid var(--dark-gray); padding: 25px 10px; border-radius: 8px; font-weight: bold; font-size: 15px; text-align: center; cursor: pointer; color: var(--dark-gray); transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
-    .menu-btn:active { background: var(--primary); border-color: var(--primary); color: #000; transform: scale(0.95);}
-
-    details { background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; border: 1px solid #e0e0e0; }
-    summary { font-weight: bold; cursor: pointer; color: var(--dark-gray); outline: none; }
-    .hasil-box { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc; line-height: 1.6;}
     
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;}
+    .menu-btn { background: #fff; border: 2px solid var(--dark-gray); padding: 25px 10px; border-radius: 8px; font-weight: bold; font-size: 15px; text-align: center; cursor: pointer; color: var(--dark-gray); transition: 0.2s;}
+    .menu-btn:active { background: var(--primary); border-color: var(--primary); color: #000;}
+
     .search-box { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;}
     .search-box > * { flex: 1; min-width: 140px;}
     .data-item { border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 12px; background: white; border-left: 5px solid var(--primary);}
     .btn-group { display: flex; gap: 10px; margin-top: 12px; }
     .btn-edit { background: var(--bg); color: #000; padding: 8px; border: 1px solid var(--border); border-radius: 4px; flex: 1; font-weight:bold; cursor: pointer;}
     .btn-hapus { background: #ea4335; color: white; padding: 8px; border: none; border-radius: 4px; flex: 1; font-weight:bold; cursor: pointer;}
+
+    /* ===== STYLE BARU UNTUK TOGGLE CHECKLIST ===== */
+    .checklist-container { border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 10px; background: #f8f9fa; }
+    .checklist-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; line-height: 1.4;}
+    .toggle-group { display: flex; border-radius: 6px; overflow: hidden; border: 1px solid #ccc; margin-bottom: 5px;}
+    .toggle-btn { flex: 1; padding: 8px; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; background: white; border: none; transition: 0.2s; }
+    .toggle-btn.active-normal { background: var(--normal); color: var(--normal-text); }
+    .toggle-btn.active-abnormal { background: var(--abnormal); color: var(--abnormal-text); }
+    .toggle-btn:not(:last-child) { border-right: 1px solid #ccc; }
+    .detail-box { display: none; margin-top: 8px; }
+    .detail-box.show { display: block; }
+    
+    details { background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; border: 1px solid #e0e0e0; }
+    summary { font-weight: bold; cursor: pointer; color: var(--dark-gray); }
+    .hasil-box { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc; line-height: 1.6;}
   </style>
 </head>
 <body>
@@ -78,7 +84,6 @@
       <img src="https://www.ciptakridatama.co.id/file/site/logo-color.png" alt="Logo PT Cipta Kridatama" class="login-logo" onerror="this.src='https://via.placeholder.com/150x60?text=Logo+CK'">
       <h2 style="margin-bottom: 5px;">SISTEM P2H</h2>
       <p style="font-size: 13px; color: #666; margin-top: 0; margin-bottom: 20px;">Silakan masukkan PIN akses Anda</p>
-      
       <div id="login-status" class="badge online" style="margin-bottom: 20px;">Memeriksa Internet...</div>
       <input type="password" id="pin-input" placeholder="•••••" style="text-align:center; font-size:24px; letter-spacing: 8px; margin-bottom: 15px; background: #fff; border: 2px solid #ccc;">
       <button id="btn-login" class="action-btn btn-mining" onclick="prosesLogin()">MASUK APLIKASI</button>
@@ -102,8 +107,6 @@
       </div>
       
       <button id="btn-sync-offline" class="action-btn btn-orange" style="display:none; margin-bottom: 20px;" onclick="sinkronisasiOffline()">🔄 Kirim Data Offline yang Tertunda</button>
-
-      <!-- TOMBOL BARU UNTUK LIHAT SEMUA RIWAYAT DARI MENU UTAMA -->
       <button class="action-btn btn-blue" onclick="bacaSemuaDataServer()" style="margin-bottom: 15px; font-size:15px;">📚 Lihat Riwayat P2H Semua Unit</button>
 
       <div class="menu-grid">
@@ -123,7 +126,6 @@
       <div class="card header-card">
         <h1 id="judul-form" style="margin:0;">P2H UNIT</h1>
       </div>
-
       <button class="action-btn btn-green" onclick="bacaDataServer()">📋 Lihat Riwayat P2H Unit Ini</button>
       <br><br>
 
@@ -148,19 +150,15 @@
           <label class="radio-item"><input type="radio" name="shift" value="NS (Night Shift)"> NS (Night Shift)</label>
         </div>
         
-        <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P1) <span>*</span></div>
-        <div id="container-p1" class="checkbox-group"></div>
+        <!-- P1 TOGGLES -->
+        <div class="title-field" style="margin-top: 25px;">PEMERIKSAAN P1 <span>*</span></div>
+        <div id="container-p1"></div>
 
-        <div class="title-field">Detail Masalah / Temuan Lapangan (P1)</div>
-        <textarea id="detail-p1" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
-
-        <div class="title-field">Pilih item yang TIDAK NORMAL / BERMASALAH (P2) <span>*</span></div>
-        <div id="container-p2" class="checkbox-group"></div>
-
-        <div class="title-field">Detail Masalah / Temuan Lapangan (P2)</div>
-        <textarea id="detail-p2" rows="2" placeholder="Tuliskan temuan..." style="margin-bottom:15px;"></textarea>
+        <!-- P2 TOGGLES -->
+        <div class="title-field" style="margin-top: 25px;">PEMERIKSAAN P2 <span>*</span></div>
+        <div id="container-p2"></div>
         
-        <div class="title-field">Status Kelayakan Unit <span>*</span></div>
+        <div class="title-field" style="margin-top: 20px;">Status Kelayakan Unit <span>*</span></div>
         <div class="radio-group">
           <label class="radio-item"><input type="radio" name="status" value="Layak Dioperasikan"> 🟢 Layak Dioperasikan</label>
           <label class="radio-item"><input type="radio" name="status" value="Tidak Layak Dioperasikan"> 🔴 Tidak Layak Dioperasikan</label>
@@ -177,13 +175,10 @@
 
     <!-- ================= LAYAR DATA & PENCARIAN ================= -->
     <div id="view-data" class="view-section">
-      <!-- Tombol Kembali dinamis akan bergantung dari mana halaman ini dibuka -->
       <button class="action-btn btn-gray" onclick="kembaliDariData()" style="margin-bottom: 10px;">🔙 Kembali</button>
       
       <div class="card">
         <h2 id="judul-riwayat" style="font-size:18px; margin-bottom:15px;">Riwayat P2H</h2>
-        
-        <!-- KOTAK FILTER DIPERBARUI -->
         <div class="search-box">
           <input type="text" id="search-input" placeholder="Cari ID / Nama Opr..." onkeyup="filterTabel()">
           <select id="filter-unit" onchange="filterTabel()">
@@ -213,15 +208,16 @@
   </div>
 
 <script>
-  // === JANGAN LUPA UPDATE URL GAS ANDA JIKA BERUBAH ===
+  // === UPDATE URL GAS ANDA DI SINI ===
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbx0psCB7xnXEoN0x_S6ea24Vr8ZQX-Nj2lxfn_qeXZpfFHBHaE_MUDOcve0vvcsfbeG-Q/exec'; 
   
   let currentUser = null; 
   let currentJenisAlat = ""; 
   let dataRiwayat = []; 
-  let asalLayarData = "view-form"; // Melacak dari mana user masuk ke halaman riwayat
+  let asalLayarData = "view-form"; 
+  let formStateP1 = {}; 
+  let formStateP2 = {};
 
-  // ================= DATA CHECKLIST DINAMIS =================
   const checklistData = {
     "DOZER": {
       p1: [
@@ -360,23 +356,108 @@
     }
   };
 
+  // =============== FUNGSI RENDER TOGGLE SYSTEM ===============
   function renderChecklist(jenisAlat) {
     const config = checklistData[jenisAlat] || checklistData["DOZER"]; 
+    formStateP1 = {}; formStateP2 = {}; // Reset state
     
+    // Render P1
     let p1HTML = "";
-    config.p1.forEach(item => {
-      p1HTML += `<label class="checkbox-item"><input type="checkbox" name="p1" value="${item}"> ${item}</label>`;
+    config.p1.forEach((item, index) => {
+      const id = `p1-${index}`;
+      formStateP1[item] = { status: "", detail: "" }; // default state
+      
+      p1HTML += `
+      <div class="checklist-container">
+        <div class="checklist-title">${item}</div>
+        <div class="toggle-group">
+          <button type="button" class="toggle-btn" id="btn-norm-${id}" onclick="setToggle('p1', '${item}', 'Normal', '${id}')">✅ NORMAL</button>
+          <button type="button" class="toggle-btn" id="btn-abn-${id}" onclick="setToggle('p1', '${item}', 'Tidak Normal', '${id}')">❌ TIDAK NORMAL</button>
+        </div>
+        <div class="detail-box" id="box-${id}">
+          <textarea id="txt-${id}" rows="2" placeholder="Jelaskan masalah / temuan secara detail..." oninput="simpanDetail('p1', '${item}', this.value)"></textarea>
+        </div>
+      </div>`;
     });
-    p1HTML += `<label class="checkbox-item"><input type="checkbox" name="p1" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p1', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>`;
     document.getElementById('container-p1').innerHTML = p1HTML;
 
+    // Render P2
     let p2HTML = "";
-    config.p2.forEach(item => {
-      p2HTML += `<label class="checkbox-item"><input type="checkbox" name="p2" value="${item}"> ${item}</label>`;
+    config.p2.forEach((item, index) => {
+      const id = `p2-${index}`;
+      formStateP2[item] = { status: "", detail: "" }; 
+      
+      p2HTML += `
+      <div class="checklist-container">
+        <div class="checklist-title">${item}</div>
+        <div class="toggle-group">
+          <button type="button" class="toggle-btn" id="btn-norm-${id}" onclick="setToggle('p2', '${item}', 'Normal', '${id}')">✅ NORMAL</button>
+          <button type="button" class="toggle-btn" id="btn-abn-${id}" onclick="setToggle('p2', '${item}', 'Tidak Normal', '${id}')">❌ TIDAK NORMAL</button>
+        </div>
+        <div class="detail-box" id="box-${id}">
+          <textarea id="txt-${id}" rows="2" placeholder="Jelaskan masalah / temuan secara detail..." oninput="simpanDetail('p2', '${item}', this.value)"></textarea>
+        </div>
+      </div>`;
     });
-    p2HTML += `<label class="checkbox-item"><input type="checkbox" name="p2" value="SEMUA AMAN & NORMAL" onchange="toggleLainnya('p2', this)"> <b>✅ SEMUA AMAN & NORMAL</b></label>`;
     document.getElementById('container-p2').innerHTML = p2HTML;
   }
+
+  function setToggle(kategori, itemNama, status, idUI) {
+    // Simpan ke state
+    if(kategori === 'p1') formStateP1[itemNama].status = status;
+    else formStateP2[itemNama].status = status;
+
+    // Update UI Button
+    document.getElementById(`btn-norm-${idUI}`).classList.remove('active-normal');
+    document.getElementById(`btn-abn-${idUI}`).classList.remove('active-abnormal');
+    
+    if (status === 'Normal') {
+      document.getElementById(`btn-norm-${idUI}`).classList.add('active-normal');
+      document.getElementById(`box-${idUI}`).classList.remove('show');
+      // Hapus text detail jika dibalikin normal
+      document.getElementById(`txt-${idUI}`).value = "";
+      if(kategori === 'p1') formStateP1[itemNama].detail = "";
+      else formStateP2[itemNama].detail = "";
+    } else {
+      document.getElementById(`btn-abn-${idUI}`).classList.add('active-abnormal');
+      document.getElementById(`box-${idUI}`).classList.add('show');
+    }
+  }
+
+  function simpanDetail(kategori, itemNama, isiText) {
+    if(kategori === 'p1') formStateP1[itemNama].detail = isiText;
+    else formStateP2[itemNama].detail = isiText;
+  }
+
+  // Set State Otomatis untuk keperluan EDIT
+  function terapkanStateEdit(kategori, dataTersimpan) {
+    const isP1 = (kategori === 'p1');
+    const stateObj = isP1 ? formStateP1 : formStateP2;
+    const config = checklistData[currentJenisAlat][kategori];
+
+    config.forEach((item, index) => {
+      const id = `${kategori}-${index}`;
+      if(dataTersimpan[item]) {
+        // Klik tombolnya via script
+        setToggle(kategori, item, dataTersimpan[item].status, id);
+        
+        // Isi textnya
+        if(dataTersimpan[item].detail) {
+           document.getElementById(`txt-${id}`).value = dataTersimpan[item].detail;
+           stateObj[item].detail = dataTersimpan[item].detail;
+        }
+      }
+    });
+  }
+
+  // Verifikasi Validasi Form Checklist
+  function cekValidasiChecklist() {
+    for (let key in formStateP1) { if(formStateP1[key].status === "") return false; }
+    for (let key in formStateP2) { if(formStateP2[key].status === "") return false; }
+    return true;
+  }
+
+  // ================= END FUNGSI RENDER =================
 
   window.onload = () => {
     updateOnlineStatus();
@@ -422,6 +503,7 @@
   function bukaFormAlat(jenisAlat) {
     currentJenisAlat = jenisAlat;
     document.getElementById('judul-form').innerText = `P2H ${jenisAlat}`;
+    kosongkanForm(); // Membersihkan sisa state edit sblmnya
     renderChecklist(jenisAlat);
     gantiLayar('view-form');
     window.scrollTo(0,0);
@@ -432,7 +514,6 @@
     gantiLayar('view-menu');
   }
 
-  // FUNGSI BARU: Logika Kembali Dinamis Halaman Riwayat
   function kembaliDariData() {
     if(asalLayarData === "view-menu") gantiLayar('view-menu');
     else gantiLayar('view-form');
@@ -458,14 +539,6 @@
     cekDataOffline();
   }
 
-  function toggleLainnya(groupName, el) {
-    if(el.checked) {
-      document.querySelectorAll(`input[name="${groupName}"]`).forEach(cb => {
-        if(cb !== el) cb.checked = false;
-      });
-    }
-  }
-
   function getRadio(name) {
     const el = document.querySelector(`input[name="${name}"]:checked`);
     return el ? el.value : "";
@@ -479,24 +552,14 @@
     }
   }
 
-  function getCheck(name) {
-    let arr = [];
-    document.querySelectorAll(`input[name="${name}"]:checked`).forEach(el => arr.push(el.value));
-    return arr.join(", ");
-  }
-  
-  function setCheck(name, valStr) {
-    document.querySelectorAll(`input[name="${name}"]`).forEach(el => el.checked = false);
-    if(valStr) {
-      valStr.split(", ").forEach(val => {
-        const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
-        if(el) el.checked = true;
-      });
-    }
-  }
-
   function simpanAtauEdit() {
     const idEdit = document.getElementById('edit-id').value;
+    
+    // Pastikan user memencet seluruh toggle button 
+    if(!cekValidasiChecklist()) {
+      return alert("Gagal: Mohon selesaikan pemeriksaan! Pilih 'Normal' atau 'Tidak Normal' pada SETIAP poin di bagian P1 dan P2.");
+    }
+
     const payload = {
       jenisAlat: currentJenisAlat,
       tanggal: document.getElementById('tanggal').value,
@@ -504,17 +567,15 @@
       namaKaryawan: document.getElementById('nama-karyawan').value,
       sn: document.getElementById('sn').value,
       shift: getRadio('shift'),
-      p1: getCheck('p1'),
-      detailP1: document.getElementById('detail-p1').value,
-      p2: getCheck('p2'),
-      detailP2: document.getElementById('detail-p2').value,
+      p1: formStateP1, // Mengirim bentuk Object
+      p2: formStateP2, // Mengirim bentuk Object
       statusUnit: getRadio('status'),
       smuMulai: document.getElementById('smu-mulai').value,
       smuSelesai: document.getElementById('smu-selesai').value
     };
 
-    if(!payload.tanggal || !payload.idUnit || !payload.shift || !payload.p1 || !payload.p2 || !payload.statusUnit || !payload.smuMulai) {
-       return alert("Gagal: Mohon lengkapi semua isian wajib yang bertanda bintang (*)");
+    if(!payload.tanggal || !payload.idUnit || !payload.shift || !payload.statusUnit || !payload.smuMulai) {
+       return alert("Gagal: Mohon lengkapi semua isian teks wajib yang bertanda bintang (*)");
     }
 
     if(!navigator.onLine) {
@@ -535,9 +596,7 @@
     .then(res => res.json())
     .then(() => { 
       alert(idEdit === "" ? `Formulir P2H ${currentJenisAlat} berhasil dikirim!` : "Perubahan berhasil disimpan!"); 
-      
       if(idEdit !== "") {
-        // Logika kembali saat selesai Edit
         if (asalLayarData === "view-menu") bacaSemuaDataServer(); 
         else bacaDataServer();
       } else {
@@ -555,15 +614,12 @@
     filterTabel();
   }
 
-  // BUKA RIWAYAT DARI DALAM FORM (Hanya lihat unit tertentu)
   function bacaDataServer() {
     if(!navigator.onLine) return alert("Gagal: Butuh internet untuk memuat riwayat server.");
     asalLayarData = "view-form";
     gantiLayar('view-data');
     document.getElementById('judul-riwayat').innerText = `Riwayat P2H ${currentJenisAlat}`;
     document.getElementById('list-data').innerHTML = "<p style='text-align:center; color:gray;'>Sedang mengambil data...</p>";
-
-    // Set filter unit ke unit ini dan disable
     document.getElementById('filter-unit').value = currentJenisAlat;
     document.getElementById('filter-unit').disabled = true;
     document.getElementById('filter-unit').style.backgroundColor = "#e8eaed";
@@ -573,15 +629,12 @@
     .then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
   }
 
-  // FUNGSI BARU: BUKA SELURUH RIWAYAT DARI MENU UTAMA
   function bacaSemuaDataServer() {
     if(!navigator.onLine) return alert("Gagal: Butuh internet untuk memuat riwayat server.");
     asalLayarData = "view-menu";
     gantiLayar('view-data');
     document.getElementById('judul-riwayat').innerText = `Semua Riwayat P2H`;
     document.getElementById('list-data').innerHTML = "<p style='text-align:center; color:gray;'>Sedang mengambil data seluruh unit...</p>";
-
-    // Bebaskan filter unit
     document.getElementById('filter-unit').disabled = false;
     document.getElementById('filter-unit').style.backgroundColor = "#fff";
     resetFilter();
@@ -591,28 +644,58 @@
     .then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
   }
 
-  // FUNGSI FILTER DIPERBARUI UNTUK MENANGKAP TANGGAL DAN UNIT
+  function renderHasilTampilan(dataObj) {
+    let resultHTML = "";
+    let adaMasalah = false;
+    
+    // Parse json jika perlu
+    let parsedData = (typeof dataObj === 'string') ? JSON.parse(dataObj) : dataObj;
+
+    for (let key in parsedData) {
+      if(parsedData[key].status === 'Tidak Normal') {
+        adaMasalah = true;
+        resultHTML += `<div style="margin-bottom:8px; border-left:3px solid #d93025; padding-left:10px;">
+          <div style="font-weight:bold; font-size:13px; color:#d93025;">${key}</div>
+          <div style="color:#555; font-size:12px; margin-top:3px;">Catatan: <i>${parsedData[key].detail || '(Tidak ada catatan)'}</i></div>
+        </div>`;
+      }
+    }
+    
+    if(!adaMasalah) return `<div style="color:gray; font-size:13px;">✅ Semua komponen diperiksa dan dalam kondisi normal.</div>`;
+    return resultHTML;
+  }
+
   function filterTabel() {
     const searchTxt = document.getElementById('search-input').value.toLowerCase();
     const filterStat = document.getElementById('filter-status').value;
     const filterUnit = document.getElementById('filter-unit').value;
-    const filterTgl = document.getElementById('filter-tanggal').value; // format YYYY-MM-DD
-    
+    const filterTgl = document.getElementById('filter-tanggal').value; 
     const box = document.getElementById('list-data');
     let html = "";
     
+    // AMBIL WAKTU SEKARANG (EPOCH) UNTUK HITUNGAN 48 JAM (Admin bebas limit)
+    const waktuSekarangEpoch = new Date().getTime();
+    const LIMIT_48_JAM = 48 * 60 * 60 * 1000;
+    
     dataRiwayat.forEach(item => {
-      // Ambil format tanggal dari database (mengambil porsi awalnya saja YYYY-MM-DD)
       const tglItem = item.tanggal.split('T')[0]; 
-      
       const matchSearch = item.idUnit.toLowerCase().includes(searchTxt) || item.namaKaryawan.toLowerCase().includes(searchTxt);
       const matchStatus = filterStat === "ALL" || item.statusUnit.includes(filterStat);
       const matchUnit = filterUnit === "ALL" || item.jenisAlat === filterUnit;
-      const matchTgl = !filterTgl || tglItem === filterTgl; // Jika kosong akan match semua
+      const matchTgl = !filterTgl || tglItem === filterTgl; 
 
       if (matchSearch && matchStatus && matchUnit && matchTgl) {
-        const btnHapusHTML = currentUser.role === 'Admin' ? `<button class="btn-hapus" onclick="hapusData('${item.id}', '${item.jenisAlat}')">Hapus</button>` : '';
-        const dataJson = encodeURIComponent(JSON.stringify(item));
+        // Cek umur form
+        const umurFormMs = waktuSekarangEpoch - parseInt(item.waktuIsiEpoch || waktuSekarangEpoch); 
+        let bisaEdit = false;
+
+        // Admin selalu bisa edit. User hanya bisa jika umur form kurang dari 48 jam (dan data miliknya sendiri).
+        if(currentUser.role === 'Admin') { bisaEdit = true; }
+        else if (umurFormMs <= LIMIT_48_JAM && item.sn.toString() === currentUser.pin.toString()) { bisaEdit = true; }
+
+        let btnEditHTML = bisaEdit ? `<button class="btn-edit" onclick="siapkanEdit('${encodeURIComponent(JSON.stringify(item))}')">Edit Form</button>` : `<button class="btn-edit" style="background:#eee; color:#aaa; cursor:not-allowed;" disabled>Terkunci</button>`;
+        let btnHapusHTML = currentUser.role === 'Admin' ? `<button class="btn-hapus" onclick="hapusData('${item.id}', '${item.jenisAlat}')">Hapus</button>` : '';
+        
         const warnaStatus = item.statusUnit.includes('Tidak') ? '#d93025' : '#0d652d';
         
         html += `
@@ -630,18 +713,16 @@
             <details>
               <summary>Lihat Hasil Ceklis P2H</summary>
               <div class="hasil-box">
-                <div style="color:#d93025; font-weight:bold;">[P1] Kelainan Utama:</div>
-                <div style="margin-bottom:8px;">${item.p1 || '-'}</div>
-                <div style="color:gray;"><i>Catatan: ${item.detailP1 || '-'}</i></div>
-                <br>
-                <div style="color:#f29900; font-weight:bold;">[P2] Kelainan Fisik/Fungsi:</div>
-                <div style="margin-bottom:8px;">${item.p2 || '-'}</div>
-                <div style="color:gray;"><i>Catatan: ${item.detailP2 || '-'}</i></div>
+                <div style="font-weight:bold; margin-bottom:8px; border-bottom:1px solid #ccc; padding-bottom:5px;">⚠️ Temuan P1:</div>
+                ${renderHasilTampilan(item.p1)}
+                
+                <div style="font-weight:bold; margin-bottom:8px; margin-top:15px; border-bottom:1px solid #ccc; padding-bottom:5px;">⚠️ Temuan P2:</div>
+                ${renderHasilTampilan(item.p2)}
               </div>
             </details>
 
             <div class="btn-group">
-              <button class="btn-edit" onclick="siapkanEdit('${dataJson}')">Edit / Update</button>
+              ${btnEditHTML}
               ${btnHapusHTML}
             </div>
           </div>`;
@@ -650,37 +731,34 @@
     box.innerHTML = html || "<p style='text-align:center; color:gray; margin-top:20px;'>Tidak ada data yang cocok dengan pencarian.</p>";
   }
 
-  // FUNGSI EDIT DIPERBARUI AGAR BISA MEMBACA KONDISI CHECKLIST UNIT YANG TEPAT
   function siapkanEdit(dataStr) {
     const item = JSON.parse(decodeURIComponent(dataStr));
     
-    // Set sistem ke jenis alat item ini agar render checklist nya tidak error (tertukar)
     currentJenisAlat = item.jenisAlat; 
-    renderChecklist(currentJenisAlat);
-    document.getElementById('judul-form').innerText = `Edit P2H ${currentJenisAlat}`;
+    renderChecklist(currentJenisAlat); // Load UI Checklist kosongan
+    
+    // Ekstrak data P1 & P2 JSON dan isi ke Toggle UI 
+    const p1Parsed = (typeof item.p1 === 'string') ? JSON.parse(item.p1) : item.p1;
+    const p2Parsed = (typeof item.p2 === 'string') ? JSON.parse(item.p2) : item.p2;
+    terapkanStateEdit('p1', p1Parsed);
+    terapkanStateEdit('p2', p2Parsed);
 
+    document.getElementById('judul-form').innerText = `Edit P2H ${currentJenisAlat}`;
     document.getElementById('edit-id').value = item.id;
     document.getElementById('tanggal').value = item.tanggal.split('T')[0];
     document.getElementById('id-unit').value = item.idUnit;
-    
     setRadio('shift', item.shift);
-    setCheck('p1', item.p1);
-    document.getElementById('detail-p1').value = item.detailP1;
-    setCheck('p2', item.p2);
-    document.getElementById('detail-p2').value = item.detailP2;
     setRadio('status', item.statusUnit);
-    
     document.getElementById('smu-mulai').value = item.smuMulai;
     document.getElementById('smu-selesai').value = item.smuSelesai;
+    
     gantiLayar('view-form'); window.scrollTo(0,0);
   }
 
-  // FUNGSI HAPUS DIPERBARUI
   function hapusData(id, jenisAlatTarget) {
     if(!confirm("Yakin hapus data ini secara permanen?")) return;
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "hapus", id: id, jenisAlat: jenisAlatTarget }) })
     .then(res => res.json()).then(() => {
-      // Reload ulang data sesuai dari mana layar asalnya
       if (asalLayarData === "view-menu") bacaSemuaDataServer(); 
       else bacaDataServer();
     });
@@ -706,11 +784,10 @@
   function kosongkanForm() {
     document.getElementById('edit-id').value = "";
     document.getElementById('id-unit').value = "";
-    setRadio('shift', ""); setCheck('p1', ""); setCheck('p2', ""); setRadio('status', "");
-    document.getElementById('detail-p1').value = "";
-    document.getElementById('detail-p2').value = "";
+    setRadio('shift', ""); setRadio('status', "");
     document.getElementById('smu-mulai').value = "";
     document.getElementById('smu-selesai').value = "";
+    // P1 P2 tidak perlu dikosongkan manual disini krn renderChecklist() akan meresetnya setiap dibuka.
   }
   
   function gantiLayar(idLayar) {

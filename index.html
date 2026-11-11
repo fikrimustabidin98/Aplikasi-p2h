@@ -202,7 +202,6 @@
   let dataRiwayat = []; 
 
   // ================= DATA CHECKLIST DINAMIS =================
-  // Anda dapat menambahkan / mengubah item untuk unit lain (Excavator, WT, dll) di dalam blok kode ini nanti.
   const checklistData = {
     "DOZER": {
       p1: [
@@ -250,98 +249,95 @@
       ]
     },
     "EXCAVATOR": {
-  p1: [
-    "[P1] Level Oli Engine (Harus di atas batas minimal)",
-    "[P1] Fungsi SKAT: Seat belt, Radio Komunikasi, Lampu, Fire Suppression gauge (Rusak/Absen)",
-    "[P1] Tuas kendali: Pedal travel, Joy stick, dan Lock hydraulic, swing (Bermasalah)",
-    "[P1] Stiker Komisioning (Mati / Tidak ada)",
-    "[P1] Fungsi SKAT: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI (Rusak/Absen)",
-    "[P1] Pemeriksaan Guard (Pelindung Kaca Kabin) telah terpasang pada Kaca Kabin Excavator"
-  ],
-  p2: [
-    "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan Kehilangan perlengkapan",
-    "[P2] Level Oli (Hydraulic, Swing, Splitter Box *medium) dan Level Air Radiator/Wipper *secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)",
-    "[P2] Bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
-    "[P2] Track group (roller, idler, sprocket, link, shoe, adjuster, dan frame)",
-    "[P2] Attachment (bucket/tip, boom, arm), dan semua cylinder beserta lock pin nya",
-    "[P2] Gangguan ketika menghidupkan atau matikan engine : Periksa suara-suara engine tidak normal dan asap gas buang",
-    "[P2] Switch kontrol : Speed travel, work mode, switch gas engine, dan lock swing* Big size",
-    "[P2] Kamera Fatigue menyala (lampu indikator kamera)***",
-    "[P2] Posisi Kamera Fatigue mengarah ke arah Operator***",
-    "[P2] Perangkat FMS/MINESTAR : Radio Wireless, Status Jaringan dan Display Onboard***",
-    "[P2] Kondisi Stopper dan Switch Proximity Tangga (terdapat cacat fisik atau tidak) **",
-    "[P2] Memastikan Indikator Tangga pada Monitor Berfungsi dengan Baik (saat tangga di posisi bawah dan indikator di monitor menyala)**",
-    "[P2] Memastikan rantai pengaman tangga terpasang dengan baik sebelum operator mengoperasikan unit**"
-  ]
-},
+      p1: [
+        "[P1] Level Oli Engine (Harus di atas batas minimal)",
+        "[P1] Fungsi SKAT: Seat belt, Radio Komunikasi, Lampu, Fire Suppression gauge (Rusak/Absen)",
+        "[P1] Tuas kendali: Pedal travel, Joy stick, dan Lock hydraulic, swing (Bermasalah)",
+        "[P1] Stiker Komisioning (Mati / Tidak ada)",
+        "[P1] Fungsi SKAT: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI (Rusak/Absen)",
+        "[P1] Pemeriksaan Guard (Pelindung Kaca Kabin) telah terpasang pada Kaca Kabin Excavator"
+      ],
+      p2: [
+        "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan Kehilangan perlengkapan",
+        "[P2] Level Oli (Hydraulic, Swing, Splitter Box *medium) dan Level Air Radiator/Wipper *secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)",
+        "[P2] Bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
+        "[P2] Track group (roller, idler, sprocket, link, shoe, adjuster, dan frame)",
+        "[P2] Attachment (bucket/tip, boom, arm), dan semua cylinder beserta lock pin nya",
+        "[P2] Gangguan ketika menghidupkan atau matikan engine : Periksa suara-suara engine tidak normal dan asap gas buang",
+        "[P2] Switch kontrol : Speed travel, work mode, switch gas engine, dan lock swing* Big size",
+        "[P2] Kamera Fatigue menyala (lampu indikator kamera)***",
+        "[P2] Posisi Kamera Fatigue mengarah ke arah Operator***",
+        "[P2] Perangkat FMS/MINESTAR : Radio Wireless, Status Jaringan dan Display Onboard***",
+        "[P2] Kondisi Stopper dan Switch Proximity Tangga (terdapat cacat fisik atau tidak) **",
+        "[P2] Memastikan Indikator Tangga pada Monitor Berfungsi dengan Baik (saat tangga di posisi bawah dan indikator di monitor menyala)**",
+        "[P2] Memastikan rantai pengaman tangga terpasang dengan baik sebelum operator mengoperasikan unit**"
+      ]
+    },
     "WT": {
-  p1: [
-    "[P1] Periksa level Oli Engine: harus diatas batas minimal",
-    "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
-    "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu)",
-    "[P1] Periksa fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake)",
-    "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
-  ],
-  p2: [
-    "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
-    "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel",
-    "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
-    "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara-suara engine tidak normal dan asap gas buang",
-    "[P2] Periksa tuas kendali: Parking brake, Transmisi, Wiper",
-    "[P2] Periksa Indikator warning: Gauge, Monitor display, dan Alarm",
-    "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*",
-    "[P2] Water pump, sprayer, Water Canon, Jet Washer, Hose Reel (Water Truck)",
-    "[P2] Timer Sprayer (Water Truck)",
-    "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator",
-    "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator",
-    "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard"
-  ]
-},
-    {
-  "GRADER": {
-    "p1": [
-      "[P1] Periksa level Oli Engine: harus diatas batas minimal",
-      "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
-      "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu khusus pekerjaan pada malam hari)",
-      "[P1] Periksa tuas kendali : Pedal Akselerator, Joy stick,pedal brake, steering, tuas Blade grup, tuas Ripper, Diflock",
-      "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
-    ],
-    "p2": [
-      "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
-      "[P2] Periksa level Oli (Hydraulic, Transmisi) dan Level Air Radiator/Wipper secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)",
-      "[P2] Periksa secara visual bekas-bekas kebocoran/ rembesan (semua cairan) disekitar komponen utama unit dan di dalam kabin engine (membuka kap engine)",
-      "[P2] Periksa tandem, lampu kerja, circle, motor circle, drawbar, frame, blade Acumulator, dll",
-      "[P2] Periksa Attachment (Blade, Ripper, dan semua cylinder beserta lock pin nya)",
-      "[P2] Periksa fungsi \"SKAT\" (Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI)",
-      "[P2] Periksa gangguan ketika menghidupkan atau matikan engine",
-      "[P2] Periksa suara- suara engine tidak normal dan asap gas buang",
-      "[P2] Periksa Indikator warning : Gauge, Monitor display, dan Alarm",
-      "[P2] Periksa Switch kontrol : Lock Hydraulic, parking brake, switch lampu kerja, causion blade"
-    ]
-  },
-  "OHT": {
-    "p1": [
-      "[P1] Periksa level Oli Engine: harus diatas batas minimal",
-      "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
-      "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu**,Fire Suppression gauge)",
-      "[P1] Uji fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake) setelah keluar dari change shift area",
-      "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
-    ],
-    "p2": [
-      "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
-      "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel",
-      "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
-      "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara- suara engine tidak normal dan asap gas buang",
-      "[P2] Periksa tuas kendali: Hoist dump Body, Transmisi, Wiper",
-      "[P2] Periksa Indikator warning: Gauge, Monitor display, Payload on Display, dan Alarm",
-      "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*",
-      "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator*",
-      "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator*",
-      "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard*"
-    ]
-  }
-}
-    // Jika Anda belum mengisi untuk Excavator/WT, sistem otomatis mengambil default (Dozer) untuk sementara waktu.
+      p1: [
+        "[P1] Periksa level Oli Engine: harus diatas batas minimal",
+        "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
+        "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu)",
+        "[P1] Periksa fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake)",
+        "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
+      ],
+      p2: [
+        "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
+        "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel",
+        "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
+        "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara-suara engine tidak normal dan asap gas buang",
+        "[P2] Periksa tuas kendali: Parking brake, Transmisi, Wiper",
+        "[P2] Periksa Indikator warning: Gauge, Monitor display, dan Alarm",
+        "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*",
+        "[P2] Water pump, sprayer, Water Canon, Jet Washer, Hose Reel (Water Truck)",
+        "[P2] Timer Sprayer (Water Truck)",
+        "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator",
+        "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator",
+        "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard"
+      ]
+    },
+    "GRADER": {
+      p1: [
+        "[P1] Periksa level Oli Engine: harus diatas batas minimal",
+        "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
+        "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu khusus pekerjaan pada malam hari)",
+        "[P1] Periksa tuas kendali : Pedal Akselerator, Joy stick,pedal brake, steering, tuas Blade grup, tuas Ripper, Diflock",
+        "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
+      ],
+      p2: [
+        "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
+        "[P2] Periksa level Oli (Hydraulic, Transmisi) dan Level Air Radiator/Wipper secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)",
+        "[P2] Periksa secara visual bekas-bekas kebocoran/ rembesan (semua cairan) disekitar komponen utama unit dan di dalam kabin engine (membuka kap engine)",
+        "[P2] Periksa tandem, lampu kerja, circle, motor circle, drawbar, frame, blade Acumulator, dll",
+        "[P2] Periksa Attachment (Blade, Ripper, dan semua cylinder beserta lock pin nya)",
+        "[P2] Periksa fungsi \"SKAT\" (Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI)",
+        "[P2] Periksa gangguan ketika menghidupkan atau matikan engine",
+        "[P2] Periksa suara- suara engine tidak normal dan asap gas buang",
+        "[P2] Periksa Indikator warning : Gauge, Monitor display, dan Alarm",
+        "[P2] Periksa Switch kontrol : Lock Hydraulic, parking brake, switch lampu kerja, causion blade"
+      ]
+    },
+    "OHT": {
+      p1: [
+        "[P1] Periksa level Oli Engine: harus diatas batas minimal",
+        "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
+        "[P1] Periksa fungsi \"SKAT\" (Seat belt, Radio Komunikasi, Lampu**,Fire Suppression gauge)",
+        "[P1] Uji fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake) setelah keluar dari change shift area",
+        "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
+      ],
+      p2: [
+        "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
+        "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel",
+        "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
+        "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara- suara engine tidak normal dan asap gas buang",
+        "[P2] Periksa tuas kendali: Hoist dump Body, Transmisi, Wiper",
+        "[P2] Periksa Indikator warning: Gauge, Monitor display, Payload on Display, dan Alarm",
+        "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*",
+        "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator*",
+        "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator*",
+        "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard*"
+      ]
+    }
   };
 
   // Fungsi untuk memasukkan checklist secara otomatis sesuai unit yang diklik

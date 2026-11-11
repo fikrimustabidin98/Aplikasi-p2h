@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P2H Alat Berat</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    /* Gunakan CSS dari jawaban sebelumnya di sini */
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+    input, select, textarea, button { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px;}
+    button { background: #28a745; color: white; border: none; font-weight: bold;}
+    #btn-sync { background: #007bff; display: none; }
+  </style>
+</head>
+<body>
+  <h2>Form P2H Offline</h2>
+  <div id="status-koneksi">Mengecek koneksi...</div>
+
+  <label>Nama Operator:</label>
+  <input type="text" id="operator">
+  
+  <label>Kode Unit:</label>
+  <input type="text" id="unit">
+
+  <label>Status:</label>
+  <select id="status">
+    <option>Ready to Use</option>
+    <option>Breakdown</option>
+  </select>
+
+  <label>Catatan:</label>
+  <textarea id="catatan"></textarea>
+
+  <button onclick="simpanP2H()">Submit P2H</button>
+  <button id="btn-sync" onclick="sinkronisasiData()">Sync Data (<span id="count-offline">0</span>)</button>
+
+  <script>
+    // URL Web App GAS Anda yang disalin dari Langkah 1
+    const GAS_URL = 'PASTE_URL_WEB_APP_ANDA_DI_SINI';
+
+    // Daftarkan Service Worker untuk Full Offline Mode
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log("Service Worker Terdaftar! Aplikasi bisa offline penuh."));
+    }
+
+    // Logika Offline/Online (Sama seperti sebelumnya)
+    window.addEventListener('load', updateStatus);
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+
+    function updateStatus() {
+      const isOnline = navigator.onLine;
+      document.getElementById('status-koneksi').innerText = isOnline ? 'Status: ONLINE' : 'Status: OFFLINE';
+      document.getElementById('status-koneksi').style.color = isOnline ? 'green' : 'red';
+      cekDataOffline();
+    }
+
+    function simpanP2H() {
+      const data = {
+        operator: document.getElementById('operator').value,
+        unit: document.getElementById('unit').value,
+        status: document.getElementById('status').value,
+        catatan: document.getElementById('catatan').value
+      };
+
+      let dataTersimpan = JSON.parse(localStorage.getItem('p2hData')) || [];
+      dataTersimpan.push(data);
+      localStorage.setItem('p2hData', JSON.stringify(dataTersimpan));
+      
+      alert("Disimpan ke memori HP!");
+      cekDataOffline();
+    }
+
+    function cekDataOffline() {
+      let data = JSON.parse(localStorage.getItem('p2hData')) || [];
+      document.getElementById('count-offline').innerText = data.length;
+      document.getElementById('btn-sync').style.display = (data.length > 0 && navigator.onLine) ? 'block' : 'none';
+    }
+
+    function sinkronisasiData() {
+      let data = JSON.parse(localStorage.getItem('p2hData')) || [];
+      if (data.length === 0) return;
+
+      document.getElementById('btn-sync').innerText = "Menyinkronkan...";
+
+      // Kirim data ke Google Apps Script via API fetch
+      fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // GAS butuh text/plain untuk CORS
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if(result.status === "sukses") {
+          alert(result.jumlah + " Data berhasil masuk ke Spreadsheet!");
+          localStorage.removeItem('p2hData');
+          cekDataOffline();
+        }
+      })
+      .catch(error => alert("Gagal koneksi server."))
+      .finally(() => document.getElementById('btn-sync').innerText = "Sync Data");
+    }
+  </script>
+</body>
+</html>

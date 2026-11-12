@@ -60,7 +60,6 @@
     .btn-edit { background: var(--bg); color: #000; padding: 8px; border: 1px solid var(--border); border-radius: 4px; flex: 1; font-weight:bold; cursor: pointer;}
     .btn-hapus { background: #ea4335; color: white; padding: 8px; border: none; border-radius: 4px; flex: 1; font-weight:bold; cursor: pointer;}
 
-    /* ===== STYLE BARU UNTUK TOGGLE CHECKLIST ===== */
     .checklist-container { border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 10px; background: #f8f9fa; }
     .checklist-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; line-height: 1.4;}
     .toggle-group { display: flex; border-radius: 6px; overflow: hidden; border: 1px solid #ccc; margin-bottom: 5px;}
@@ -165,8 +164,8 @@
         </div>
 
         <div style="display:flex; gap:10px; margin-bottom:15px;">
-          <div style="flex:1;"><div class="title-field">SMU - MULAI <span>*</span></div><input type="number" id="smu-mulai"></div>
-          <div style="flex:1;"><div class="title-field">SMU - SELESAI</div><input type="number" id="smu-selesai"></div>
+          <div style="flex:1;"><div class="title-field">SMU - MULAI <span>*</span></div><input type="number" id="smu-mulai" step="any"></div>
+          <div style="flex:1;"><div class="title-field">SMU - SELESAI</div><input type="number" id="smu-selesai" step="any"></div>
         </div>
 
         <button class="action-btn btn-mining" id="btn-submit" onclick="simpanAtauEdit()">KIRIM FORMULIR P2H</button>
@@ -356,16 +355,14 @@
     }
   };
 
-  // =============== FUNGSI RENDER TOGGLE SYSTEM ===============
   function renderChecklist(jenisAlat) {
     const config = checklistData[jenisAlat] || checklistData["DOZER"]; 
-    formStateP1 = {}; formStateP2 = {}; // Reset state
+    formStateP1 = {}; formStateP2 = {}; 
     
-    // Render P1
     let p1HTML = "";
     config.p1.forEach((item, index) => {
       const id = `p1-${index}`;
-      formStateP1[item] = { status: "", detail: "" }; // default state
+      formStateP1[item] = { status: "", detail: "" }; 
       
       p1HTML += `
       <div class="checklist-container">
@@ -381,7 +378,6 @@
     });
     document.getElementById('container-p1').innerHTML = p1HTML;
 
-    // Render P2
     let p2HTML = "";
     config.p2.forEach((item, index) => {
       const id = `p2-${index}`;
@@ -403,18 +399,15 @@
   }
 
   function setToggle(kategori, itemNama, status, idUI) {
-    // Simpan ke state
     if(kategori === 'p1') formStateP1[itemNama].status = status;
     else formStateP2[itemNama].status = status;
 
-    // Update UI Button
     document.getElementById(`btn-norm-${idUI}`).classList.remove('active-normal');
     document.getElementById(`btn-abn-${idUI}`).classList.remove('active-abnormal');
     
     if (status === 'Normal') {
       document.getElementById(`btn-norm-${idUI}`).classList.add('active-normal');
       document.getElementById(`box-${idUI}`).classList.remove('show');
-      // Hapus text detail jika dibalikin normal
       document.getElementById(`txt-${idUI}`).value = "";
       if(kategori === 'p1') formStateP1[itemNama].detail = "";
       else formStateP2[itemNama].detail = "";
@@ -429,7 +422,6 @@
     else formStateP2[itemNama].detail = isiText;
   }
 
-  // Set State Otomatis untuk keperluan EDIT
   function terapkanStateEdit(kategori, dataTersimpan) {
     const isP1 = (kategori === 'p1');
     const stateObj = isP1 ? formStateP1 : formStateP2;
@@ -437,11 +429,9 @@
 
     config.forEach((item, index) => {
       const id = `${kategori}-${index}`;
-      if(dataTersimpan[item]) {
-        // Klik tombolnya via script
+      if(dataTersimpan[item] && dataTersimpan[item].status !== "") {
         setToggle(kategori, item, dataTersimpan[item].status, id);
         
-        // Isi textnya
         if(dataTersimpan[item].detail) {
            document.getElementById(`txt-${id}`).value = dataTersimpan[item].detail;
            stateObj[item].detail = dataTersimpan[item].detail;
@@ -450,14 +440,11 @@
     });
   }
 
-  // Verifikasi Validasi Form Checklist
   function cekValidasiChecklist() {
     for (let key in formStateP1) { if(formStateP1[key].status === "") return false; }
     for (let key in formStateP2) { if(formStateP2[key].status === "") return false; }
     return true;
   }
-
-  // ================= END FUNGSI RENDER =================
 
   window.onload = () => {
     updateOnlineStatus();
@@ -503,7 +490,7 @@
   function bukaFormAlat(jenisAlat) {
     currentJenisAlat = jenisAlat;
     document.getElementById('judul-form').innerText = `P2H ${jenisAlat}`;
-    kosongkanForm(); // Membersihkan sisa state edit sblmnya
+    kosongkanForm(); 
     renderChecklist(jenisAlat);
     gantiLayar('view-form');
     window.scrollTo(0,0);
@@ -555,7 +542,6 @@
   function simpanAtauEdit() {
     const idEdit = document.getElementById('edit-id').value;
     
-    // Pastikan user memencet seluruh toggle button 
     if(!cekValidasiChecklist()) {
       return alert("Gagal: Mohon selesaikan pemeriksaan! Pilih 'Normal' atau 'Tidak Normal' pada SETIAP poin di bagian P1 dan P2.");
     }
@@ -567,8 +553,8 @@
       namaKaryawan: document.getElementById('nama-karyawan').value,
       sn: document.getElementById('sn').value,
       shift: getRadio('shift'),
-      p1: formStateP1, // Mengirim bentuk Object
-      p2: formStateP2, // Mengirim bentuk Object
+      p1: formStateP1, 
+      p2: formStateP2, 
       statusUnit: getRadio('status'),
       smuMulai: document.getElementById('smu-mulai').value,
       smuSelesai: document.getElementById('smu-selesai').value
@@ -647,8 +633,6 @@
   function renderHasilTampilan(dataObj) {
     let resultHTML = "";
     let adaMasalah = false;
-    
-    // Parse json jika perlu
     let parsedData = (typeof dataObj === 'string') ? JSON.parse(dataObj) : dataObj;
 
     for (let key in parsedData) {
@@ -673,7 +657,6 @@
     const box = document.getElementById('list-data');
     let html = "";
     
-    // AMBIL WAKTU SEKARANG (EPOCH) UNTUK HITUNGAN 48 JAM (Admin bebas limit)
     const waktuSekarangEpoch = new Date().getTime();
     const LIMIT_48_JAM = 48 * 60 * 60 * 1000;
     
@@ -685,11 +668,9 @@
       const matchTgl = !filterTgl || tglItem === filterTgl; 
 
       if (matchSearch && matchStatus && matchUnit && matchTgl) {
-        // Cek umur form
         const umurFormMs = waktuSekarangEpoch - parseInt(item.waktuIsiEpoch || waktuSekarangEpoch); 
         let bisaEdit = false;
 
-        // Admin selalu bisa edit. User hanya bisa jika umur form kurang dari 48 jam (dan data miliknya sendiri).
         if(currentUser.role === 'Admin') { bisaEdit = true; }
         else if (umurFormMs <= LIMIT_48_JAM && item.sn.toString() === currentUser.pin.toString()) { bisaEdit = true; }
 
@@ -707,7 +688,8 @@
             <div style="font-size:13px; color:#5f6368; line-height:1.6; margin-bottom:10px;">
               Tgl: ${tglItem} | Shift: ${item.shift}<br>
               Opr: ${item.namaKaryawan} (SN: ${item.sn})<br>
-              SMU: ${item.smuMulai} s/d ${item.smuSelesai || '-'}<br>
+              SMU: ${item.smuMulai} s/d ${item.smuSelesai || '-'} <br>
+              Total SMU: <b>${item.totalSmu || 0} Jam</b>
             </div>
             
             <details>
@@ -735,9 +717,8 @@
     const item = JSON.parse(decodeURIComponent(dataStr));
     
     currentJenisAlat = item.jenisAlat; 
-    renderChecklist(currentJenisAlat); // Load UI Checklist kosongan
+    renderChecklist(currentJenisAlat); 
     
-    // Ekstrak data P1 & P2 JSON dan isi ke Toggle UI 
     const p1Parsed = (typeof item.p1 === 'string') ? JSON.parse(item.p1) : item.p1;
     const p2Parsed = (typeof item.p2 === 'string') ? JSON.parse(item.p2) : item.p2;
     terapkanStateEdit('p1', p1Parsed);
@@ -787,7 +768,6 @@
     setRadio('shift', ""); setRadio('status', "");
     document.getElementById('smu-mulai').value = "";
     document.getElementById('smu-selesai').value = "";
-    // P1 P2 tidak perlu dikosongkan manual disini krn renderChecklist() akan meresetnya setiap dibuka.
   }
   
   function gantiLayar(idLayar) {

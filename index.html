@@ -34,9 +34,9 @@
     .btn-blue { background: #1a73e8; color: white;} 
     .btn-gray { background: #5f6368; color: white; width: auto; padding: 10px;}
     
-    .radio-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-    .radio-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; cursor: pointer;}
-    input[type="radio"] { width: 18px; height: 18px; margin: 0; accent-color: var(--dark-gray);}
+    .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+    .radio-item, .checkbox-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; cursor: pointer;}
+    input[type="radio"], input[type="checkbox"] { width: 18px; height: 18px; margin: 0; accent-color: var(--dark-gray);}
     
     .badge { padding: 5px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; text-align: center; margin-bottom:10px;}
     .online { background: #ceead6; color: #0d652d; } .offline { background: #fad2cf; color: #a50e0e; }
@@ -73,11 +73,12 @@
     details { background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; border: 1px solid #e0e0e0; }
     summary { font-weight: bold; cursor: pointer; color: var(--dark-gray); }
     .hasil-box { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc; line-height: 1.6;}
+    
+    .smu-block { background:#f4f6f9; padding:15px; border-radius:6px; margin-bottom:15px; border: 1px solid #e0e0e0; display:none; }
   </style>
 </head>
 <body>
 
-  <!-- ================= LAYAR LOGIN ================= -->
   <div id="view-login" class="view-section view-active login-wrapper">
     <div class="login-box">
       <img src="https://www.ciptakridatama.co.id/file/site/logo-color.png" alt="Logo PT Cipta Kridatama" class="login-logo" onerror="this.src='https://via.placeholder.com/150x60?text=Logo+CK'">
@@ -92,7 +93,7 @@
 
   <div class="container">
     
-    <!-- ================= LAYAR MENU PILIH UNIT ================= -->
+    <!-- ================= MENU ================= -->
     <div id="view-menu" class="view-section">
       <div class="card header-card">
         <div>
@@ -118,7 +119,7 @@
       </div>
     </div>
 
-    <!-- ================= LAYAR FORM P2H ================= -->
+    <!-- ================= FORM P2H ================= -->
     <div id="view-form" class="view-section">
       <button class="action-btn btn-gray" onclick="kembaliKeMenu()" style="margin-bottom: 10px;">🔙 Kembali ke Menu Utama</button>
       
@@ -137,11 +138,11 @@
         <div class="title-field">ID Unit <span>*</span></div>
         <input type="text" id="id-unit" required style="margin-bottom:15px; text-transform:uppercase;">
 
-        <div class="title-field">Nama Karyawan (Otomatis)</div>
-        <input type="text" id="nama-karyawan" readonly style="margin-bottom:15px;">
-        
-        <div class="title-field">SN (Otomatis sesuai PIN)</div>
-        <input type="text" id="sn" readonly style="margin-bottom:15px;">
+        <div class="title-field">Nama Karyawan & SN</div>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+           <input type="text" id="nama-karyawan" readonly style="flex:2;">
+           <input type="text" id="sn" readonly style="flex:1;">
+        </div>
         
         <div class="title-field">Shift Kerja <span>*</span></div>
         <div class="radio-group">
@@ -149,30 +150,26 @@
           <label class="radio-item"><input type="radio" name="shift" value="NS (Night Shift)"> NS (Night Shift)</label>
         </div>
         
-        <!-- P1 TOGGLES -->
         <div class="title-field" style="margin-top: 25px;">PEMERIKSAAN P1 <span>*</span></div>
         <div id="container-p1"></div>
 
-        <!-- P2 TOGGLES -->
         <div class="title-field" style="margin-top: 25px;">PEMERIKSAAN P2 <span>*</span></div>
         <div id="container-p2"></div>
         
         <div class="title-field" style="margin-top: 20px;">Status Kelayakan Unit <span>*</span></div>
-        <div class="radio-group">
+        <div class="radio-group" style="margin-bottom:25px;">
           <label class="radio-item"><input type="radio" name="status" value="Layak Dioperasikan"> 🟢 Layak Dioperasikan</label>
           <label class="radio-item"><input type="radio" name="status" value="Tidak Layak Dioperasikan"> 🔴 Tidak Layak Dioperasikan</label>
         </div>
 
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-          <div style="flex:1;"><div class="title-field">SMU - MULAI <span>*</span></div><input type="number" id="smu-mulai" step="any"></div>
-          <div style="flex:1;"><div class="title-field">SMU - SELESAI</div><input type="number" id="smu-selesai" step="any"></div>
-        </div>
+        <!-- AREA SMU DINAMIS -->
+        <div id="smu-container"></div>
 
         <button class="action-btn btn-mining" id="btn-submit" onclick="simpanAtauEdit()">KIRIM FORMULIR P2H</button>
       </div>
     </div>
 
-    <!-- ================= LAYAR DATA & PENCARIAN ================= -->
+    <!-- ================= DATA & PENCARIAN ================= -->
     <div id="view-data" class="view-section">
       <button class="action-btn btn-gray" onclick="kembaliDariData()" style="margin-bottom: 10px;">🔙 Kembali</button>
       
@@ -207,7 +204,6 @@
   </div>
 
 <script>
-  // === UPDATE URL GAS ANDA DI SINI ===
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbx0psCB7xnXEoN0x_S6ea24Vr8ZQX-Nj2lxfn_qeXZpfFHBHaE_MUDOcve0vvcsfbeG-Q/exec'; 
   
   let currentUser = null; 
@@ -218,142 +214,74 @@
   let formStateP2 = {};
 
   const checklistData = {
-    "DOZER": {
-      p1: [
-        "[P1] Level Oli Engine (Kurang / di bawah minimal)",
-        "[P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)",
-        "[P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake",
-        "[P1] Indikator Warning: Gauge, Monitor display, Alarm",
-        "[P1] Stiker Komisioning (Mati/Tidak ada)",
-        "[P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"
-      ],
-      p2: [
-        "[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)",
-        "[P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)",
-        "[P2] Kebocoran Cairan disekitar komponen utama",
-        "[P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame",
-        "[P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder",
-        "[P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder",
-        "[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll",
-        "[P2] Gangguan saat menghidupkan / mematikan engine",
-        "[P2] Suara engine tidak normal / asap gas buang pekat",
-        "[P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break",
-        "[P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)",
-        "[P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)"
-      ]
-    },
-    "COMPACTOR": {
-      p1: [
-        "[P1] Level Oli Engine (Kurang / di bawah minimal)",
-        "[P1] Ban kiri & kanan serta baut roda pada Final drive (Bermasalah)",
-        "[P1] Fungsi SKAT: Seat belt, Radio Komunikasi, Lampu malam (Rusak/Absen)",
-        "[P1] Bagian Drum, Scraper drum, Motor vibration, & Rubber (Bermasalah)",
-        "[P1] Stiker Komisioning (Mati / Tidak ada)"
-      ],
-      p2: [
-        "[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)",
-        "[P2] Level Oli (Hyd, Transmisi) & Air Radiator/Wiper",
-        "[P2] Kebocoran/rembesan cairan di komponen utama & kabin engine",
-        "[P2] Tuas kendali: Tuas travel & Kemudi/Steering",
-        "[P2] Bagian Drum, Scraper drum, Motor vibration, & Rubber",
-        "[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll",
-        "[P2] Gangguan ketika menghidupkan atau matikan engine",
-        "[P2] Suara engine tidak normal / asap gas buang pekat",
-        "[P2] Indikator Warning: Gauge, Monitor display, & Alarm",
-        "[P2] Switch Kontrol: Speed travel, Work mode vibration, Switch gas"
-      ]
-    },
-    "EXCAVATOR": {
-      p1: [
-        "[P1] Level Oli Engine (Harus di atas batas minimal)",
-        "[P1] Fungsi SKAT: Seat belt, Radio Komunikasi, Lampu, Fire Suppression gauge (Rusak/Absen)",
-        "[P1] Tuas kendali: Pedal travel, Joy stick, dan Lock hydraulic, swing (Bermasalah)",
-        "[P1] Stiker Komisioning (Mati / Tidak ada)",
-        "[P1] Fungsi SKAT: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI (Rusak/Absen)",
-        "[P1] Pemeriksaan Guard (Pelindung Kaca Kabin) telah terpasang pada Kaca Kabin Excavator"
-      ],
-      p2: [
-        "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan Kehilangan perlengkapan",
-        "[P2] Level Oli (Hydraulic, Swing, Splitter Box *medium) dan Level Air Radiator/Wipper *secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)",
-        "[P2] Bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
-        "[P2] Track group (roller, idler, sprocket, link, shoe, adjuster, dan frame)",
-        "[P2] Attachment (bucket/tip, boom, arm), dan semua cylinder beserta lock pin nya",
-        "[P2] Gangguan ketika menghidupkan atau matikan engine : Periksa suara-suara engine tidak normal dan asap gas buang",
-        "[P2] Switch kontrol : Speed travel, work mode, switch gas engine, dan lock swing* Big size",
-        "[P2] Kamera Fatigue menyala (lampu indikator kamera)***",
-        "[P2] Posisi Kamera Fatigue mengarah ke arah Operator***",
-        "[P2] Perangkat FMS/MINESTAR : Radio Wireless, Status Jaringan dan Display Onboard***",
-        "[P2] Kondisi Stopper dan Switch Proximity Tangga (terdapat cacat fisik atau tidak) **",
-        "[P2] Memastikan Indikator Tangga pada Monitor Berfungsi dengan Baik (saat tangga di posisi bawah dan indikator di monitor menyala)**",
-        "[P2] Memastikan rantai pengaman tangga terpasang dengan baik sebelum operator mengoperasikan unit**"
-      ]
-    },
-    "WT": {
-      p1: [
-        "[P1] Periksa level Oli Engine: harus diatas batas minimal",
-        "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
-        "[P1] Periksa fungsi SKAT (Seat belt, Radio Komunikasi, Lampu)",
-        "[P1] Periksa fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake)",
-        "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
-      ],
-      p2: [
-        "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
-        "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel",
-        "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
-        "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara-suara engine tidak normal dan asap gas buang",
-        "[P2] Periksa tuas kendali: Parking brake, Transmisi, Wiper",
-        "[P2] Periksa Indikator warning: Gauge, Monitor display, dan Alarm",
-        "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*",
-        "[P2] Water pump, sprayer, Water Canon, Jet Washer, Hose Reel (Water Truck)",
-        "[P2] Timer Sprayer (Water Truck)",
-        "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator",
-        "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator",
-        "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard"
-      ]
-    },
-    "GRADER": {
-      p1: [
-        "[P1] Periksa level Oli Engine: harus diatas batas minimal",
-        "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
-        "[P1] Periksa fungsi SKAT (Seat belt, Radio Komunikasi, Lampu khusus pekerjaan pada malam hari)",
-        "[P1] Periksa tuas kendali : Pedal Akselerator, Joy stick,pedal brake, steering, tuas Blade grup, tuas Ripper, Diflock",
-        "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
-      ],
-      p2: [
-        "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
-        "[P2] Periksa level Oli (Hydraulic, Transmisi) dan Level Air Radiator/Wipper secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)",
-        "[P2] Periksa secara visual bekas-bekas kebocoran/ rembesan (semua cairan) disekitar komponen utama unit dan di dalam kabin engine (membuka kap engine)",
-        "[P2] Periksa tandem, lampu kerja, circle, motor circle, drawbar, frame, blade Acumulator, dll",
-        "[P2] Periksa Attachment (Blade, Ripper, dan semua cylinder beserta lock pin nya)",
-        "[P2] Periksa fungsi SKAT (Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI)",
-        "[P2] Periksa gangguan ketika menghidupkan atau matikan engine",
-        "[P2] Periksa suara- suara engine tidak normal dan asap gas buang",
-        "[P2] Periksa Indikator warning : Gauge, Monitor display, dan Alarm",
-        "[P2] Periksa Switch kontrol : Lock Hydraulic, parking brake, switch lampu kerja, causion blade"
-      ]
-    },
-    "OHT": {
-      p1: [
-        "[P1] Periksa level Oli Engine: harus diatas batas minimal",
-        "[P1] Pemeriksaan kondisi visual tyre dan bolt roda",
-        "[P1] Periksa fungsi SKAT (Seat belt, Radio Komunikasi, Lampu**,Fire Suppression gauge)",
-        "[P1] Uji fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake) setelah keluar dari change shift area",
-        "[P1] Periksa stiker komisioning pastikan ada dan berlaku"
-      ],
-      p2: [
-        "[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan",
-        "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel",
-        "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit",
-        "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara- suara engine tidak normal dan asap gas buang",
-        "[P2] Periksa tuas kendali: Hoist dump Body, Transmisi, Wiper",
-        "[P2] Periksa Indikator warning: Gauge, Monitor display, Payload on Display, dan Alarm",
-        "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*",
-        "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator*",
-        "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator*",
-        "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard*"
-      ]
-    }
+    "DOZER": { p1: ["[P1] Level Oli Engine (Kurang / di bawah minimal)", "[P1] Fungsi SKAT: Seat belt, Radio, Lampu kerja (Rusak/Absen)", "[P1] Tuas Kendali & Pedal: Transmisi, Steering, Blade, Ripper, Gas, Brake", "[P1] Indikator Warning: Gauge, Monitor display, Alarm", "[P1] Stiker Komisioning (Mati/Tidak ada)", "[P1] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder"], p2: ["[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)", "[P2] Level Oli & Air: Hyd, Transmisi, Pivot, Equalizer, Radiator (Kurang)", "[P2] Kebocoran Cairan disekitar komponen utama", "[P2] Track Group: Roller, Idler, Sprocket, Link, Shoe, Adjuster, Frame", "[P2] Blade Group: Push arm, Blade, End bid, Cutting blade, Silinder", "[P2] Ripper Group: Housing, Link, Shank, Tip, Lock Pin, Silinder", "[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll", "[P2] Gangguan saat menghidupkan / mematikan engine", "[P2] Suara engine tidak normal / asap gas buang pekat", "[P2] Switch Kontrol: Speed travel, Work mode, Switch gas, Lock hyd, Parking break", "[P2] Ramp Guard Cabin untuk clearing (Rusak/Tidak ada)", "[P2] Display MMS & Jaringan Coremodule (Mati/Disconnect)"] },
+    "COMPACTOR": { p1: ["[P1] Level Oli Engine (Kurang / di bawah minimal)", "[P1] Ban kiri & kanan serta baut roda pada Final drive (Bermasalah)", "[P1] Fungsi SKAT: Seat belt, Radio Komunikasi, Lampu malam (Rusak/Absen)", "[P1] Bagian Drum, Scraper drum, Motor vibration, & Rubber (Bermasalah)", "[P1] Stiker Komisioning (Mati / Tidak ada)"], p2: ["[P2] Walk Around Inspection (Ada kerusakan fisik/kehilangan alat)", "[P2] Level Oli (Hyd, Transmisi) & Air Radiator/Wiper", "[P2] Kebocoran/rembesan cairan di komponen utama & kabin engine", "[P2] Tuas kendali: Tuas travel & Kemudi/Steering", "[P2] Bagian Drum, Scraper drum, Motor vibration, & Rubber", "[P2] Fungsi SKAT: Klakson, Alarm mundur, Spion, Kaca, FSI, dll", "[P2] Gangguan ketika menghidupkan atau matikan engine", "[P2] Suara engine tidak normal / asap gas buang pekat", "[P2] Indikator Warning: Gauge, Monitor display, & Alarm", "[P2] Switch Kontrol: Speed travel, Work mode vibration, Switch gas"] },
+    "EXCAVATOR": { p1: ["[P1] Level Oli Engine (Harus di atas batas minimal)", "[P1] Fungsi SKAT: Seat belt, Radio Komunikasi, Lampu, Fire Suppression gauge (Rusak/Absen)", "[P1] Tuas kendali: Pedal travel, Joy stick, dan Lock hydraulic, swing (Bermasalah)", "[P1] Stiker Komisioning (Mati / Tidak ada)", "[P1] Fungsi SKAT: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI (Rusak/Absen)", "[P1] Pemeriksaan Guard (Pelindung Kaca Kabin) telah terpasang pada Kaca Kabin Excavator"], p2: ["[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan Kehilangan perlengkapan", "[P2] Level Oli (Hydraulic, Swing, Splitter Box *medium) dan Level Air Radiator/Wipper *secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)", "[P2] Bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit", "[P2] Track group (roller, idler, sprocket, link, shoe, adjuster, dan frame)", "[P2] Attachment (bucket/tip, boom, arm), dan semua cylinder beserta lock pin nya", "[P2] Gangguan ketika menghidupkan atau matikan engine : Periksa suara-suara engine tidak normal dan asap gas buang", "[P2] Switch kontrol : Speed travel, work mode, switch gas engine, dan lock swing* Big size", "[P2] Kamera Fatigue menyala (lampu indikator kamera)***", "[P2] Posisi Kamera Fatigue mengarah ke arah Operator***", "[P2] Perangkat FMS/MINESTAR : Radio Wireless, Status Jaringan dan Display Onboard***", "[P2] Kondisi Stopper dan Switch Proximity Tangga (terdapat cacat fisik atau tidak) **", "[P2] Memastikan Indikator Tangga pada Monitor Berfungsi dengan Baik (saat tangga di posisi bawah dan indikator di monitor menyala)**", "[P2] Memastikan rantai pengaman tangga terpasang dengan baik sebelum operator mengoperasikan unit**"] },
+    "WT": { p1: ["[P1] Periksa level Oli Engine: harus diatas batas minimal", "[P1] Pemeriksaan kondisi visual tyre dan bolt roda", "[P1] Periksa fungsi SKAT (Seat belt, Radio Komunikasi, Lampu)", "[P1] Periksa fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake)", "[P1] Periksa stiker komisioning pastikan ada dan berlaku"], p2: ["[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan", "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel", "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit", "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara-suara engine tidak normal dan asap gas buang", "[P2] Periksa tuas kendali: Parking brake, Transmisi, Wiper", "[P2] Periksa Indikator warning: Gauge, Monitor display, dan Alarm", "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*", "[P2] Water pump, sprayer, Water Canon, Jet Washer, Hose Reel (Water Truck)", "[P2] Timer Sprayer (Water Truck)", "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator", "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator", "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard"] },
+    "GRADER": { p1: ["[P1] Periksa level Oli Engine: harus diatas batas minimal", "[P1] Pemeriksaan kondisi visual tyre dan bolt roda", "[P1] Periksa fungsi SKAT (Seat belt, Radio Komunikasi, Lampu khusus pekerjaan pada malam hari)", "[P1] Periksa tuas kendali : Pedal Akselerator, Joy stick,pedal brake, steering, tuas Blade grup, tuas Ripper, Diflock", "[P1] Periksa stiker komisioning pastikan ada dan berlaku"], p2: ["[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan", "[P2] Periksa level Oli (Hydraulic, Transmisi) dan Level Air Radiator/Wipper secara Visual, tanpa gunakan Dipstick (cukup periksa di Sight Glass dan Instrument panel)", "[P2] Periksa secara visual bekas-bekas kebocoran/ rembesan (semua cairan) disekitar komponen utama unit dan di dalam kabin engine (membuka kap engine)", "[P2] Periksa tandem, lampu kerja, circle, motor circle, drawbar, frame, blade Acumulator, dll", "[P2] Periksa Attachment (Blade, Ripper, dan semua cylinder beserta lock pin nya)", "[P2] Periksa fungsi SKAT (Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Auto Lub, Fast Fuel Fill, Fire Extinguisher atau FSI)", "[P2] Periksa gangguan ketika menghidupkan atau matikan engine", "[P2] Periksa suara- suara engine tidak normal dan asap gas buang", "[P2] Periksa Indikator warning : Gauge, Monitor display, dan Alarm", "[P2] Periksa Switch kontrol : Lock Hydraulic, parking brake, switch lampu kerja, causion blade"] },
+    "OHT": { p1: ["[P1] Periksa level Oli Engine: harus diatas batas minimal", "[P1] Pemeriksaan kondisi visual tyre dan bolt roda", "[P1] Periksa fungsi SKAT (Seat belt, Radio Komunikasi, Lampu**,Fire Suppression gauge)", "[P1] Uji fungsi : Steering, Brake System (Service Brake, Retarder Brake, Emergency Brake, Parking Brake) setelah keluar dari change shift area", "[P1] Periksa stiker komisioning pastikan ada dan berlaku"], p2: ["[P2] Walk Around Inspection: Periksa bekas-bekas / tanda-tanda kerusakan dan kehilangan perlengkapan", "[P2] Periksa level Oli : (Hydraulic, Steering, Trans/Torqoe ) dan Level Air Radiator / wipper secara Visual di Sight Glass dan Instrument Panel", "[P2] Periksa bekas-bekas kebocoran (semua cairan) disekitar komponen utama unit", "[P2] Periksa gangguan saat menghidupkan atau mematikan engine dan periksa suara- suara engine tidak normal dan asap gas buang", "[P2] Periksa tuas kendali: Hoist dump Body, Transmisi, Wiper", "[P2] Periksa Indikator warning: Gauge, Monitor display, Payload on Display, dan Alarm", "[P2] Periksa Fungsi: Back alarm, klakson, Strobe light, lampu depan, lampu belakang, lampu sign, kaca spion, kaca depan dan kaca samping, Autolube, Fast Fuel Fill, Fire Extinguisher atau FSI dan Lampu Indikator Parking Brake Outdoor*", "[P2] Periksa kondisi fisik fatigue camera dan pastikan perangkat berfungsi melalui indikator*", "[P2] Pastikan posisi fatigue camera mengarah ke wajah operator*", "[P2] Periksa perangkat FMS/MINESTAR : Radio Wireless, Coremodule, Display Onboard*"] }
   };
+
+  // ======== PEMBENTUKAN UI SMU DINAMIS ========
+  function generateSmuUI(jenis) {
+      let html = '';
+      if (jenis === 'DOZER') {
+          html = `<div class="title-field">Pilih Jenis Pekerjaan Hari Ini <span>*</span></div>
+                  <div class="checkbox-group" style="flex-direction:row; margin-bottom:15px;">
+                    <label class="checkbox-item"><input type="checkbox" id="chk-gen" onchange="document.getElementById('b-gen').style.display=this.checked?'block':'none'"> General</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chk-rip" onchange="document.getElementById('b-rip').style.display=this.checked?'block':'none'"> Ripping</label>
+                  </div>
+                  <div id="b-gen" class="smu-block">
+                    <div style="font-weight:bold; margin-bottom:10px;">🕒 SMU GENERAL</div>
+                    <div style="display:flex; gap:10px;">
+                       <div style="flex:1;"><div class="title-field">Mulai <span>*</span></div><input type="number" id="smu-gen-m" step="any"></div>
+                       <div style="flex:1;"><div class="title-field">Selesai</div><input type="number" id="smu-gen-s" step="any"></div>
+                    </div>
+                  </div>
+                  <div id="b-rip" class="smu-block">
+                    <div style="font-weight:bold; margin-bottom:10px;">⛏️ SMU RIPPING</div>
+                    <div style="display:flex; gap:10px;">
+                       <div style="flex:1;"><div class="title-field">Mulai <span>*</span></div><input type="number" id="smu-rip-m" step="any"></div>
+                       <div style="flex:1;"><div class="title-field">Selesai</div><input type="number" id="smu-rip-s" step="any"></div>
+                    </div>
+                  </div>`;
+      } else if (jenis === 'EXCAVATOR') {
+          html = `<div class="title-field">Pilih Jenis Pekerjaan Hari Ini <span>*</span></div>
+                  <div class="checkbox-group" style="flex-direction:row; margin-bottom:15px;">
+                    <label class="checkbox-item"><input type="checkbox" id="chk-gen" onchange="document.getElementById('b-gen').style.display=this.checked?'block':'none'"> General</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chk-load" onchange="document.getElementById('b-load').style.display=this.checked?'block':'none'"> Loading</label>
+                  </div>
+                  <div id="b-gen" class="smu-block">
+                    <div style="font-weight:bold; margin-bottom:10px;">🕒 SMU GENERAL</div>
+                    <div style="display:flex; gap:10px;">
+                       <div style="flex:1;"><div class="title-field">Mulai <span>*</span></div><input type="number" id="smu-gen-m" step="any"></div>
+                       <div style="flex:1;"><div class="title-field">Selesai</div><input type="number" id="smu-gen-s" step="any"></div>
+                    </div>
+                  </div>
+                  <div id="b-load" class="smu-block">
+                    <div style="font-weight:bold; margin-bottom:10px;">🚜 SMU LOADING</div>
+                    <div style="display:flex; gap:10px;">
+                       <div style="flex:1;"><div class="title-field">Mulai <span>*</span></div><input type="number" id="smu-load-m" step="any"></div>
+                       <div style="flex:1;"><div class="title-field">Selesai</div><input type="number" id="smu-load-s" step="any"></div>
+                    </div>
+                  </div>`;
+      } else if (jenis === 'WT') {
+          html = `<div style="display:flex; gap:10px; margin-bottom:15px;">
+                   <div style="flex:1;"><div class="title-field">SMU Mulai <span>*</span></div><input type="number" id="smu-std-m" step="any"></div>
+                   <div style="flex:1;"><div class="title-field">SMU Selesai</div><input type="number" id="smu-std-s" step="any"></div>
+                 </div>
+                 <div style="display:flex; gap:10px; margin-bottom:15px;">
+                   <div style="flex:1;"><div class="title-field">Ritase Isi Tandon</div><input type="number" id="ritase-t" placeholder="Berapa kali"></div>
+                   <div style="flex:1;"><div class="title-field">Ritase Siram Pit</div><input type="number" id="ritase-p" placeholder="Berapa kali"></div>
+                 </div>`;
+      } else {
+          html = `<div style="display:flex; gap:10px; margin-bottom:15px;">
+                   <div style="flex:1;"><div class="title-field">SMU Mulai <span>*</span></div><input type="number" id="smu-std-m" step="any"></div>
+                   <div style="flex:1;"><div class="title-field">SMU Selesai</div><input type="number" id="smu-std-s" step="any"></div>
+                 </div>`;
+      }
+      document.getElementById('smu-container').innerHTML = html;
+  }
 
   function renderChecklist(jenisAlat) {
     const config = checklistData[jenisAlat] || checklistData["DOZER"]; 
@@ -363,7 +291,6 @@
     config.p1.forEach((item, index) => {
       const id = `p1-${index}`;
       formStateP1[item] = { status: "", detail: "" }; 
-      
       p1HTML += `
       <div class="checklist-container">
         <div class="checklist-title">${item}</div>
@@ -382,7 +309,6 @@
     config.p2.forEach((item, index) => {
       const id = `p2-${index}`;
       formStateP2[item] = { status: "", detail: "" }; 
-      
       p2HTML += `
       <div class="checklist-container">
         <div class="checklist-title">${item}</div>
@@ -401,16 +327,13 @@
   function setToggle(kategori, itemNama, status, idUI) {
     if(kategori === 'p1') formStateP1[itemNama].status = status;
     else formStateP2[itemNama].status = status;
-
     document.getElementById(`btn-norm-${idUI}`).classList.remove('active-normal');
     document.getElementById(`btn-abn-${idUI}`).classList.remove('active-abnormal');
-    
     if (status === 'Normal') {
       document.getElementById(`btn-norm-${idUI}`).classList.add('active-normal');
       document.getElementById(`box-${idUI}`).classList.remove('show');
       document.getElementById(`txt-${idUI}`).value = "";
-      if(kategori === 'p1') formStateP1[itemNama].detail = "";
-      else formStateP2[itemNama].detail = "";
+      if(kategori === 'p1') formStateP1[itemNama].detail = ""; else formStateP2[itemNama].detail = "";
     } else {
       document.getElementById(`btn-abn-${idUI}`).classList.add('active-abnormal');
       document.getElementById(`box-${idUI}`).classList.add('show');
@@ -431,7 +354,6 @@
       const id = `${kategori}-${index}`;
       if(dataTersimpan[item] && dataTersimpan[item].status !== "") {
         setToggle(kategori, item, dataTersimpan[item].status, id);
-        
         if(dataTersimpan[item].detail) {
            document.getElementById(`txt-${id}`).value = dataTersimpan[item].detail;
            stateObj[item].detail = dataTersimpan[item].detail;
@@ -449,33 +371,22 @@
   window.onload = () => {
     updateOnlineStatus();
     const savedUser = localStorage.getItem('p2h_user');
-    if (savedUser) {
-      currentUser = JSON.parse(savedUser);
-      masukKeMenuUtama();
-    }
+    if (savedUser) { currentUser = JSON.parse(savedUser); masukKeMenuUtama(); }
   };
 
   function prosesLogin() {
     const pin = document.getElementById('pin-input').value;
     if (!pin) return alert("Masukkan PIN!");
     if (!navigator.onLine) return alert("Anda sedang offline. Butuh internet untuk login pertama kali.");
-
-    const btn = document.getElementById('btn-login');
-    btn.innerText = "MENCOCOKKAN..."; btn.disabled = true;
+    const btn = document.getElementById('btn-login'); btn.innerText = "MENCOCOKKAN..."; btn.disabled = true;
 
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "login", pin: pin }) })
-    .then(res => res.json())
-    .then(res => {
+    .then(res => res.json()).then(res => {
       if (res.status === "sukses") {
         currentUser = { nama: res.nama, role: res.role, pin: pin }; 
-        localStorage.setItem('p2h_user', JSON.stringify(currentUser));
-        masukKeMenuUtama();
-      } else {
-        alert(res.pesan);
-        document.getElementById('pin-input').value = "";
-      }
-    })
-    .finally(() => { btn.innerText = "MASUK APLIKASI"; btn.disabled = false; });
+        localStorage.setItem('p2h_user', JSON.stringify(currentUser)); masukKeMenuUtama();
+      } else { alert(res.pesan); document.getElementById('pin-input').value = ""; }
+    }).finally(() => { btn.innerText = "MASUK APLIKASI"; btn.disabled = false; });
   }
 
   function masukKeMenuUtama() {
@@ -483,40 +394,26 @@
     document.getElementById('pin-input').value = "";
     document.getElementById('nama-karyawan').value = currentUser.nama; 
     document.getElementById('sn').value = currentUser.pin; 
-    gantiLayar('view-menu');
-    window.scrollTo(0,0);
+    gantiLayar('view-menu'); window.scrollTo(0,0);
   }
 
   function bukaFormAlat(jenisAlat) {
     currentJenisAlat = jenisAlat;
     document.getElementById('judul-form').innerText = `P2H ${jenisAlat}`;
-    kosongkanForm(); 
-    renderChecklist(jenisAlat);
-    gantiLayar('view-form');
-    window.scrollTo(0,0);
+    kosongkanForm(); renderChecklist(jenisAlat); generateSmuUI(jenisAlat);
+    gantiLayar('view-form'); window.scrollTo(0,0);
   }
   
-  function kembaliKeMenu() {
-    kosongkanForm();
-    gantiLayar('view-menu');
-  }
-
-  function kembaliDariData() {
-    if(asalLayarData === "view-menu") gantiLayar('view-menu');
-    else gantiLayar('view-form');
-  }
+  function kembaliKeMenu() { kosongkanForm(); gantiLayar('view-menu'); }
+  function kembaliDariData() { if(asalLayarData === "view-menu") gantiLayar('view-menu'); else gantiLayar('view-form'); }
 
   function keluarAplikasi() {
     if(!confirm("Yakin ingin keluar dari akun ini?")) return;
-    localStorage.removeItem('p2h_user');
-    currentUser = null;
-    currentJenisAlat = "";
-    gantiLayar('view-login');
+    localStorage.removeItem('p2h_user'); currentUser = null; currentJenisAlat = ""; gantiLayar('view-login');
   }
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-  window.addEventListener('online', updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
+  window.addEventListener('online', updateOnlineStatus); window.addEventListener('offline', updateOnlineStatus);
 
   function updateOnlineStatus() {
     const statusTxt = navigator.onLine ? '🟢 ONLINE' : '🔴 OFFLINE';
@@ -526,127 +423,103 @@
     cekDataOffline();
   }
 
-  function getRadio(name) {
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    return el ? el.value : "";
-  }
-  
-  function setRadio(name, val) {
-    document.querySelectorAll(`input[name="${name}"]`).forEach(el => el.checked = false);
-    if(val) {
-      const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
-      if(el) el.checked = true;
-    }
-  }
+  function getRadio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ""; }
+  function setRadio(name, val) { document.querySelectorAll(`input[name="${name}"]`).forEach(el => el.checked = false); if(val) { const el = document.querySelector(`input[name="${name}"][value="${val}"]`); if(el) el.checked = true; } }
 
   function simpanAtauEdit() {
     const idEdit = document.getElementById('edit-id').value;
-    
-    if(!cekValidasiChecklist()) {
-      return alert("Gagal: Mohon selesaikan pemeriksaan! Pilih 'Normal' atau 'Tidak Normal' pada SETIAP poin di bagian P1 dan P2.");
-    }
+    if(!cekValidasiChecklist()) return alert("Gagal: Mohon selesaikan pemeriksaan P1 & P2!");
 
-    const payload = {
-      jenisAlat: currentJenisAlat,
-      tanggal: document.getElementById('tanggal').value,
+    let payload = {
+      jenisAlat: currentJenisAlat, tanggal: document.getElementById('tanggal').value,
       idUnit: document.getElementById('id-unit').value.toUpperCase(),
-      namaKaryawan: document.getElementById('nama-karyawan').value,
-      sn: document.getElementById('sn').value,
-      shift: getRadio('shift'),
-      p1: formStateP1, 
-      p2: formStateP2, 
-      statusUnit: getRadio('status'),
-      smuMulai: document.getElementById('smu-mulai').value,
-      smuSelesai: document.getElementById('smu-selesai').value
+      namaKaryawan: document.getElementById('nama-karyawan').value, sn: document.getElementById('sn').value,
+      shift: getRadio('shift'), statusUnit: getRadio('status'),
+      p1: formStateP1, p2: formStateP2
     };
 
-    if(!payload.tanggal || !payload.idUnit || !payload.shift || !payload.statusUnit || !payload.smuMulai) {
-       return alert("Gagal: Mohon lengkapi semua isian teks wajib yang bertanda bintang (*)");
+    // Validasi penangkapan nilai SMU Dinamis
+    if (currentJenisAlat === 'DOZER') {
+       if(!document.getElementById('chk-gen').checked && !document.getElementById('chk-rip').checked) return alert("Silakan pilih jenis pekerjaan (General/Ripping)!");
+       if(document.getElementById('chk-gen').checked) { payload.smuGenMulai = document.getElementById('smu-gen-m').value; payload.smuGenSelesai = document.getElementById('smu-gen-s').value; if(!payload.smuGenMulai) return alert("Isi SMU Awal General!"); }
+       if(document.getElementById('chk-rip').checked) { payload.smuRipMulai = document.getElementById('smu-rip-m').value; payload.smuRipSelesai = document.getElementById('smu-rip-s').value; if(!payload.smuRipMulai) return alert("Isi SMU Awal Ripping!"); }
+    } else if (currentJenisAlat === 'EXCAVATOR') {
+       if(!document.getElementById('chk-gen').checked && !document.getElementById('chk-load').checked) return alert("Silakan pilih jenis pekerjaan (General/Loading)!");
+       if(document.getElementById('chk-gen').checked) { payload.smuGenMulai = document.getElementById('smu-gen-m').value; payload.smuGenSelesai = document.getElementById('smu-gen-s').value; if(!payload.smuGenMulai) return alert("Isi SMU Awal General!"); }
+       if(document.getElementById('chk-load').checked) { payload.smuLoadMulai = document.getElementById('smu-load-m').value; payload.smuLoadSelesai = document.getElementById('smu-load-s').value; if(!payload.smuLoadMulai) return alert("Isi SMU Awal Loading!"); }
+    } else if (currentJenisAlat === 'WT') {
+       payload.smuMulai = document.getElementById('smu-std-m').value; payload.smuSelesai = document.getElementById('smu-std-s').value;
+       payload.ritaseTandon = document.getElementById('ritase-t').value; payload.ritasePit = document.getElementById('ritase-p').value;
+       if(!payload.smuMulai) return alert("Isi SMU Awal!");
+    } else {
+       payload.smuMulai = document.getElementById('smu-std-m').value; payload.smuSelesai = document.getElementById('smu-std-s').value;
+       if(!payload.smuMulai) return alert("Isi SMU Awal!");
     }
+
+    if(!payload.tanggal || !payload.idUnit || !payload.shift || !payload.statusUnit) return alert("Lengkapi data dasar unit bertanda (*)");
 
     if(!navigator.onLine) {
       if(idEdit !== "") return alert("Peringatan: Tidak bisa mengedit data server saat offline.");
-      let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
-      saved.push(payload);
-      localStorage.setItem('p2hData', JSON.stringify(saved));
-      alert("Tersimpan Offline! Data akan tertunda. Klik tombol oranye 'Kirim Data Offline' setelah sinyal kembali.");
+      let saved = JSON.parse(localStorage.getItem('p2hData')) || []; saved.push(payload); localStorage.setItem('p2hData', JSON.stringify(saved));
+      alert("Tersimpan Offline! Klik tombol 'Kirim Data Offline' setelah sinyal kembali.");
       kosongkanForm(); cekDataOffline(); gantiLayar('view-menu'); return;
     }
 
-    const btn = document.getElementById('btn-submit');
-    btn.innerText = "Mengirim..."; btn.disabled = true;
+    const btn = document.getElementById('btn-submit'); btn.innerText = "Mengirim..."; btn.disabled = true;
+    let requestBody = idEdit === "" ? { action: "tambah", data: [payload] } : { action: "edit", id: idEdit, ...payload };
 
-    let requestBody = idEdit === "" ? { action: "tambah", data: [payload] } : { action: "edit", id: idEdit, jenisAlat: currentJenisAlat, ...payload };
-
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify(requestBody) })
-    .then(res => res.json())
-    .then(() => { 
-      alert(idEdit === "" ? `Formulir P2H ${currentJenisAlat} berhasil dikirim!` : "Perubahan berhasil disimpan!"); 
-      if(idEdit !== "") {
-        if (asalLayarData === "view-menu") bacaSemuaDataServer(); 
-        else bacaDataServer();
-      } else {
-        kosongkanForm(); gantiLayar('view-menu'); 
-      }
-    })
-    .finally(() => { btn.innerText = "KIRIM FORMULIR P2H"; btn.disabled = false; });
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify(requestBody) }).then(res => res.json()).then(() => { 
+      alert("Tersimpan ke Server!"); 
+      if(idEdit !== "") { if(asalLayarData === "view-menu") bacaSemuaDataServer(); else bacaDataServer(); } else { kosongkanForm(); gantiLayar('view-menu'); }
+    }).finally(() => { btn.innerText = "KIRIM FORMULIR P2H"; btn.disabled = false; });
   }
 
   function resetFilter() {
-    document.getElementById('search-input').value = "";
+    document.getElementById('search-input').value = ""; document.getElementById('filter-tanggal').value = ""; document.getElementById('filter-status').value = "ALL";
     if (asalLayarData === "view-menu") document.getElementById('filter-unit').value = "ALL";
-    document.getElementById('filter-tanggal').value = "";
-    document.getElementById('filter-status').value = "ALL";
     filterTabel();
   }
 
   function bacaDataServer() {
-    if(!navigator.onLine) return alert("Gagal: Butuh internet untuk memuat riwayat server.");
-    asalLayarData = "view-form";
-    gantiLayar('view-data');
-    document.getElementById('judul-riwayat').innerText = `Riwayat P2H ${currentJenisAlat}`;
-    document.getElementById('list-data').innerHTML = "<p style='text-align:center; color:gray;'>Sedang mengambil data...</p>";
-    document.getElementById('filter-unit').value = currentJenisAlat;
-    document.getElementById('filter-unit').disabled = true;
-    document.getElementById('filter-unit').style.backgroundColor = "#e8eaed";
-
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "baca", jenisAlat: currentJenisAlat }) })
-    .then(res => res.json())
-    .then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
+    if(!navigator.onLine) return alert("Gagal: Butuh internet!"); asalLayarData = "view-form"; gantiLayar('view-data');
+    document.getElementById('judul-riwayat').innerText = `Riwayat P2H ${currentJenisAlat}`; document.getElementById('list-data').innerHTML = "<p style='text-align:center; color:gray;'>Mengambil data...</p>";
+    document.getElementById('filter-unit').value = currentJenisAlat; document.getElementById('filter-unit').disabled = true; document.getElementById('filter-unit').style.backgroundColor = "#e8eaed";
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "baca", jenisAlat: currentJenisAlat }) }).then(res => res.json()).then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
   }
 
   function bacaSemuaDataServer() {
-    if(!navigator.onLine) return alert("Gagal: Butuh internet untuk memuat riwayat server.");
-    asalLayarData = "view-menu";
-    gantiLayar('view-data');
-    document.getElementById('judul-riwayat').innerText = `Semua Riwayat P2H`;
-    document.getElementById('list-data').innerHTML = "<p style='text-align:center; color:gray;'>Sedang mengambil data seluruh unit...</p>";
-    document.getElementById('filter-unit').disabled = false;
-    document.getElementById('filter-unit').style.backgroundColor = "#fff";
-    resetFilter();
-
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "baca", jenisAlat: "SEMUA" }) })
-    .then(res => res.json())
-    .then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
+    if(!navigator.onLine) return alert("Gagal: Butuh internet!"); asalLayarData = "view-menu"; gantiLayar('view-data');
+    document.getElementById('judul-riwayat').innerText = `Semua Riwayat P2H`; document.getElementById('list-data').innerHTML = "<p style='text-align:center; color:gray;'>Mengambil seluruh data...</p>";
+    document.getElementById('filter-unit').disabled = false; document.getElementById('filter-unit').style.backgroundColor = "#fff"; resetFilter();
+    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "baca", jenisAlat: "SEMUA" }) }).then(res => res.json()).then(res => { dataRiwayat = res.data.reverse(); filterTabel(); });
   }
 
   function renderHasilTampilan(dataObj) {
-    let resultHTML = "";
-    let adaMasalah = false;
-    let parsedData = (typeof dataObj === 'string') ? JSON.parse(dataObj) : dataObj;
-
+    let resultHTML = ""; let adaMasalah = false; let parsedData = (typeof dataObj === 'string') ? JSON.parse(dataObj) : dataObj;
     for (let key in parsedData) {
       if(parsedData[key].status === 'Tidak Normal') {
-        adaMasalah = true;
-        resultHTML += `<div style="margin-bottom:8px; border-left:3px solid #d93025; padding-left:10px;">
-          <div style="font-weight:bold; font-size:13px; color:#d93025;">${key}</div>
-          <div style="color:#555; font-size:12px; margin-top:3px;">Catatan: <i>${parsedData[key].detail || '(Tidak ada catatan)'}</i></div>
-        </div>`;
+        adaMasalah = true; resultHTML += `<div style="margin-bottom:8px; border-left:3px solid #d93025; padding-left:10px;"><div style="font-weight:bold; font-size:13px; color:#d93025;">${key}</div><div style="color:#555; font-size:12px; margin-top:3px;">Catatan: <i>${parsedData[key].detail || '-'}</i></div></div>`;
       }
     }
-    
-    if(!adaMasalah) return `<div style="color:gray; font-size:13px;">✅ Semua komponen diperiksa dan dalam kondisi normal.</div>`;
-    return resultHTML;
+    return !adaMasalah ? `<div style="color:gray; font-size:13px;">✅ Normal</div>` : resultHTML;
+  }
+  
+  function renderSMURiwayat(item) {
+      let dt = item.dataTambahan || {};
+      let txt = "";
+      if (item.jenisAlat === 'DOZER') {
+          if (dt.smuGenMulai) txt += `<b>[Gen]</b> SMU: ${dt.smuGenMulai} s/d ${dt.smuGenSelesai||'?'} (Tot: <b>${dt.totalGen} Jam</b>)<br>`;
+          if (dt.smuRipMulai) txt += `<b>[Rip]</b> SMU: ${dt.smuRipMulai} s/d ${dt.smuRipSelesai||'?'} (Tot: <b>${dt.totalRip} Jam</b>)<br>`;
+      } else if (item.jenisAlat === 'EXCAVATOR') {
+          if (dt.smuGenMulai) txt += `<b>[Gen]</b> SMU: ${dt.smuGenMulai} s/d ${dt.smuGenSelesai||'?'} (Tot: <b>${dt.totalGen} Jam</b>)<br>`;
+          if (dt.smuLoadMulai) txt += `<b>[Load]</b> SMU: ${dt.smuLoadMulai} s/d ${dt.smuLoadSelesai||'?'} (Tot: <b>${dt.totalLoad} Jam</b>)<br>`;
+      } else if (item.jenisAlat === 'WT') {
+          txt += `SMU: ${dt.smuMulai||'-'} s/d ${dt.smuSelesai||'?'} (Tot: <b>${dt.totalSmu} Jam</b>)<br>`;
+          txt += `Ritase Tandon: <b>${dt.ritaseTandon||0}</b> | Ritase Pit: <b>${dt.ritasePit||0}</b><br>`;
+      } else {
+          txt += `SMU: ${dt.smuMulai||'-'} s/d ${dt.smuSelesai||'?'} (Tot: <b>${dt.totalSmu} Jam</b>)<br>`;
+      }
+      return txt || "Belum ada data SMU";
   }
 
   function filterTabel() {
@@ -654,84 +527,63 @@
     const filterStat = document.getElementById('filter-status').value;
     const filterUnit = document.getElementById('filter-unit').value;
     const filterTgl = document.getElementById('filter-tanggal').value; 
-    const box = document.getElementById('list-data');
-    let html = "";
-    
-    const waktuSekarangEpoch = new Date().getTime();
-    const LIMIT_48_JAM = 48 * 60 * 60 * 1000;
+    const box = document.getElementById('list-data'); let html = "";
+    const LIMIT_48_JAM = 48 * 60 * 60 * 1000; const wktSekarang = new Date().getTime();
     
     dataRiwayat.forEach(item => {
       const tglItem = item.tanggal.split('T')[0]; 
-      const matchSearch = item.idUnit.toLowerCase().includes(searchTxt) || item.namaKaryawan.toLowerCase().includes(searchTxt);
-      const matchStatus = filterStat === "ALL" || item.statusUnit.includes(filterStat);
-      const matchUnit = filterUnit === "ALL" || item.jenisAlat === filterUnit;
-      const matchTgl = !filterTgl || tglItem === filterTgl; 
-
-      if (matchSearch && matchStatus && matchUnit && matchTgl) {
-        const umurFormMs = waktuSekarangEpoch - parseInt(item.waktuIsiEpoch || waktuSekarangEpoch); 
-        let bisaEdit = false;
-
-        if(currentUser.role === 'Admin') { bisaEdit = true; }
-        else if (umurFormMs <= LIMIT_48_JAM && item.sn.toString() === currentUser.pin.toString()) { bisaEdit = true; }
-
-        let btnEditHTML = bisaEdit ? `<button class="btn-edit" onclick="siapkanEdit('${encodeURIComponent(JSON.stringify(item))}')">Edit Form</button>` : `<button class="btn-edit" style="background:#eee; color:#aaa; cursor:not-allowed;" disabled>Terkunci</button>`;
-        let btnHapusHTML = currentUser.role === 'Admin' ? `<button class="btn-hapus" onclick="hapusData('${item.id}', '${item.jenisAlat}')">Hapus</button>` : '';
+      if ((item.idUnit.toLowerCase().includes(searchTxt) || item.namaKaryawan.toLowerCase().includes(searchTxt)) && (filterStat === "ALL" || item.statusUnit.includes(filterStat)) && (filterUnit === "ALL" || item.jenisAlat === filterUnit) && (!filterTgl || tglItem === filterTgl)) {
         
+        let bisaEdit = (currentUser.role === 'Admin') || ((wktSekarang - parseInt(item.waktuIsiEpoch || wktSekarang)) <= LIMIT_48_JAM && item.sn.toString() === currentUser.pin.toString());
+        let btnEditHTML = bisaEdit ? `<button class="btn-edit" onclick="siapkanEdit('${encodeURIComponent(JSON.stringify(item))}')">Edit Form</button>` : `<button class="btn-edit" style="background:#eee; color:#aaa;" disabled>Terkunci</button>`;
+        let btnHapusHTML = currentUser.role === 'Admin' ? `<button class="btn-hapus" onclick="hapusData('${item.id}', '${item.jenisAlat}')">Hapus</button>` : '';
         const warnaStatus = item.statusUnit.includes('Tidak') ? '#d93025' : '#0d652d';
         
         html += `
           <div class="data-item">
-            <div style="font-weight:bold; color:var(--dark-gray); font-size:16px; margin-bottom:5px;">
-              <span style="color:var(--primary-dark); margin-right:5px;">[${item.jenisAlat}]</span>${item.idUnit} 
-              <span style="float:right; color:${warnaStatus}; font-size:13px;">${item.statusUnit}</span>
-            </div>
+            <div style="font-weight:bold; color:var(--dark-gray); font-size:16px; margin-bottom:5px;"><span style="color:var(--primary-dark); margin-right:5px;">[${item.jenisAlat}]</span>${item.idUnit} <span style="float:right; color:${warnaStatus}; font-size:13px;">${item.statusUnit}</span></div>
             <div style="font-size:13px; color:#5f6368; line-height:1.6; margin-bottom:10px;">
-              Tgl: ${tglItem} | Shift: ${item.shift}<br>
-              Opr: ${item.namaKaryawan} (SN: ${item.sn})<br>
-              SMU: ${item.smuMulai} s/d ${item.smuSelesai || '-'} <br>
-              Total SMU: <b>${item.totalSmu || 0} Jam</b>
-            </div>
-            
-            <details>
-              <summary>Lihat Hasil Ceklis P2H</summary>
-              <div class="hasil-box">
-                <div style="font-weight:bold; margin-bottom:8px; border-bottom:1px solid #ccc; padding-bottom:5px;">⚠️ Temuan P1:</div>
-                ${renderHasilTampilan(item.p1)}
-                
-                <div style="font-weight:bold; margin-bottom:8px; margin-top:15px; border-bottom:1px solid #ccc; padding-bottom:5px;">⚠️ Temuan P2:</div>
-                ${renderHasilTampilan(item.p2)}
+              Tgl: ${tglItem} | Shift: ${item.shift} | Opr: ${item.namaKaryawan} (SN: ${item.sn})<br>
+              <div style="background:#f1f3f4; padding:8px; border-radius:4px; margin-top:5px; line-height:1.8;">
+                ${renderSMURiwayat(item)}
               </div>
-            </details>
-
-            <div class="btn-group">
-              ${btnEditHTML}
-              ${btnHapusHTML}
             </div>
+            <details><summary>Lihat Hasil Ceklis P2H</summary><div class="hasil-box">
+                <div style="font-weight:bold; border-bottom:1px solid #ccc; padding-bottom:5px;">⚠️ Temuan P1:</div>${renderHasilTampilan(item.p1)}
+                <div style="font-weight:bold; margin-top:15px; border-bottom:1px solid #ccc; padding-bottom:5px;">⚠️ Temuan P2:</div>${renderHasilTampilan(item.p2)}
+            </div></details>
+            <div class="btn-group">${btnEditHTML}${btnHapusHTML}</div>
           </div>`;
       }
     });
-    box.innerHTML = html || "<p style='text-align:center; color:gray; margin-top:20px;'>Tidak ada data yang cocok dengan pencarian.</p>";
+    box.innerHTML = html || "<p style='text-align:center; color:gray;'>Tidak ada data yang cocok.</p>";
   }
 
   function siapkanEdit(dataStr) {
-    const item = JSON.parse(decodeURIComponent(dataStr));
+    const item = JSON.parse(decodeURIComponent(dataStr)); currentJenisAlat = item.jenisAlat; 
+    renderChecklist(currentJenisAlat); generateSmuUI(currentJenisAlat); 
     
-    currentJenisAlat = item.jenisAlat; 
-    renderChecklist(currentJenisAlat); 
-    
-    const p1Parsed = (typeof item.p1 === 'string') ? JSON.parse(item.p1) : item.p1;
-    const p2Parsed = (typeof item.p2 === 'string') ? JSON.parse(item.p2) : item.p2;
-    terapkanStateEdit('p1', p1Parsed);
-    terapkanStateEdit('p2', p2Parsed);
+    terapkanStateEdit('p1', (typeof item.p1 === 'string') ? JSON.parse(item.p1) : item.p1);
+    terapkanStateEdit('p2', (typeof item.p2 === 'string') ? JSON.parse(item.p2) : item.p2);
 
-    document.getElementById('judul-form').innerText = `Edit P2H ${currentJenisAlat}`;
-    document.getElementById('edit-id').value = item.id;
-    document.getElementById('tanggal').value = item.tanggal.split('T')[0];
-    document.getElementById('id-unit').value = item.idUnit;
-    setRadio('shift', item.shift);
-    setRadio('status', item.statusUnit);
-    document.getElementById('smu-mulai').value = item.smuMulai;
-    document.getElementById('smu-selesai').value = item.smuSelesai;
+    document.getElementById('judul-form').innerText = `Edit P2H ${currentJenisAlat}`; document.getElementById('edit-id').value = item.id;
+    document.getElementById('tanggal').value = item.tanggal.split('T')[0]; document.getElementById('id-unit').value = item.idUnit;
+    setRadio('shift', item.shift); setRadio('status', item.statusUnit);
+    
+    // Terapkan SMU Dinamis ke Form Edit
+    let dt = item.dataTambahan || {};
+    if (currentJenisAlat === 'DOZER') {
+        if(dt.smuGenMulai){ document.getElementById('chk-gen').click(); document.getElementById('smu-gen-m').value = dt.smuGenMulai; document.getElementById('smu-gen-s').value = dt.smuGenSelesai||''; }
+        if(dt.smuRipMulai){ document.getElementById('chk-rip').click(); document.getElementById('smu-rip-m').value = dt.smuRipMulai; document.getElementById('smu-rip-s').value = dt.smuRipSelesai||''; }
+    } else if (currentJenisAlat === 'EXCAVATOR') {
+        if(dt.smuGenMulai){ document.getElementById('chk-gen').click(); document.getElementById('smu-gen-m').value = dt.smuGenMulai; document.getElementById('smu-gen-s').value = dt.smuGenSelesai||''; }
+        if(dt.smuLoadMulai){ document.getElementById('chk-load').click(); document.getElementById('smu-load-m').value = dt.smuLoadMulai; document.getElementById('smu-load-s').value = dt.smuLoadSelesai||''; }
+    } else if (currentJenisAlat === 'WT') {
+        document.getElementById('smu-std-m').value = dt.smuMulai||''; document.getElementById('smu-std-s').value = dt.smuSelesai||'';
+        document.getElementById('ritase-t').value = dt.ritaseTandon||''; document.getElementById('ritase-p').value = dt.ritasePit||'';
+    } else {
+        document.getElementById('smu-std-m').value = dt.smuMulai||''; document.getElementById('smu-std-s').value = dt.smuSelesai||'';
+    }
     
     gantiLayar('view-form'); window.scrollTo(0,0);
   }
@@ -739,41 +591,13 @@
   function hapusData(id, jenisAlatTarget) {
     if(!confirm("Yakin hapus data ini secara permanen?")) return;
     fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "hapus", id: id, jenisAlat: jenisAlatTarget }) })
-    .then(res => res.json()).then(() => {
-      if (asalLayarData === "view-menu") bacaSemuaDataServer(); 
-      else bacaDataServer();
-    });
+    .then(res => res.json()).then(() => { if (asalLayarData === "view-menu") bacaSemuaDataServer(); else bacaDataServer(); });
   }
 
-  function cekDataOffline() {
-    let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
-    const btn = document.getElementById('btn-sync-offline');
-    if (saved.length > 0 && navigator.onLine && currentUser) {
-      btn.style.display = 'block'; btn.innerText = `🔄 Kirim Data Offline (${saved.length})`;
-    } else { btn.style.display = 'none'; }
-  }
-
-  function sinkronisasiOffline() {
-    let saved = JSON.parse(localStorage.getItem('p2hData')) || [];
-    const btn = document.getElementById('btn-sync-offline');
-    btn.innerText = "Mengirim..."; btn.disabled = true;
-    fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "tambah", data: saved }) })
-    .then(res => res.json()).then(() => { alert("Seluruh data tertunda terkirim ke Server!"); localStorage.removeItem('p2hData'); cekDataOffline(); })
-    .finally(() => btn.disabled = false);
-  }
-
-  function kosongkanForm() {
-    document.getElementById('edit-id').value = "";
-    document.getElementById('id-unit').value = "";
-    setRadio('shift', ""); setRadio('status', "");
-    document.getElementById('smu-mulai').value = "";
-    document.getElementById('smu-selesai').value = "";
-  }
-  
-  function gantiLayar(idLayar) {
-    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('view-active'));
-    document.getElementById(idLayar).classList.add('view-active');
-  }
+  function cekDataOffline() { let saved = JSON.parse(localStorage.getItem('p2hData')) || []; const btn = document.getElementById('btn-sync-offline'); if (saved.length > 0 && navigator.onLine && currentUser) { btn.style.display = 'block'; btn.innerText = `🔄 Kirim Data Offline (${saved.length})`; } else { btn.style.display = 'none'; } }
+  function sinkronisasiOffline() { let saved = JSON.parse(localStorage.getItem('p2hData')) || []; const btn = document.getElementById('btn-sync-offline'); btn.innerText = "Mengirim..."; btn.disabled = true; fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: "tambah", data: saved }) }).then(res => res.json()).then(() => { alert("Seluruh data tertunda terkirim ke Server!"); localStorage.removeItem('p2hData'); cekDataOffline(); }).finally(() => btn.disabled = false); }
+  function kosongkanForm() { document.getElementById('edit-id').value = ""; document.getElementById('id-unit').value = ""; setRadio('shift', ""); setRadio('status', ""); }
+  function gantiLayar(idLayar) { document.querySelectorAll('.view-section').forEach(el => el.classList.remove('view-active')); document.getElementById(idLayar).classList.add('view-active'); }
 </script>
 </body>
 </html>
